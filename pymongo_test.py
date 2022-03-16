@@ -1,4 +1,6 @@
 import collections
+from turtle import update
+from unicodedata import name
 import pymongo
 from pymongo import MongoClient
 
@@ -29,13 +31,26 @@ e = {'_id': 'DZ-fHPAAAJ',
                                                                      'i10_index': {'All': '577', 'Since2016': '484'}}}, {'updateTime': '2021-03-14 13:52:05', 'cited': {'citations': {'All': '177951', 'Since2016': '80835'},
                                                                                                                                                                         'h_index': {'All': '163', 'Since2016': '115'},
                                                                                                                                                                         'i10_index': {'All': '577', 'Since2016': '484'}}}]}
-a = {"$push": {'citedRecord': {"$each": [{'updateTime': '"2022-03-14 15:38:00', 'cited': {'citations': {'All': '177951', 'Since2016': '80835'},
+a = {"$push": {'citedRecord': {"$each": [{'updateTime': '"2022-03-16 15:46:00', 'cited': {'citations': {'All': '177951', 'Since2016': '80835'},
                                                                                           'h_index': {'All': '163', 'Since2016': '115'},
                                                                                           'i10_index': {'All': '577', 'Since2016': '484'}}}]}}}
+b = {"$set": {"personalData.updateTime": '2022-03-16 15:46:00', 'cited': {'citations': {'All': '171', 'Since2016': '80835'},
+                                                                          'h_index': {'All': '163', 'Since2016': '115'},
+                                                                          'i10_index': {'All': '577', 'Since2016': '484'}}}}
+
+
+def merge_two_dicts(x, y):
+    z = x.copy()   # start with keys and values of x
+    z.update(y)    # modifies z with keys and values of y
+    return z
+
+
+updatedata = merge_two_dicts(a, b)
 # {$push:{"citedRecord":{$each:[{'updateTime': '"2022-03-14 15:38:00', 'cited': {'citations': {'All': '177951', 'Since2016': '80835'},
 #                                                                                    'h_index': {'All': '163', 'Since2016': '115'},
 #                                                                                    'i10_index': {'All': '577', 'Since2016': '484'}}}]}}}
-collection.update_one(test, a)
+collection.update_one(test, updatedata)
+# collection.update_one({"_id": 3}, {"$set": {"name": "sally"}})
 
 # collection.insert_one(e)
 
