@@ -46,4 +46,5 @@ def get_labelIDlist(label):
             break
         time.sleep(2)
     Label['updateTime'] = getTime.currentTime()
+    Label['_id'] = label
     return Label

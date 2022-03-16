@@ -1,3 +1,4 @@
+from distutils.log import error
 from itertools import count
 
 import pymongo
@@ -12,48 +13,47 @@ collection = db["test"]
 # 更新userprofile
 
 
-def update_personaldata(personalData):
-    items = jsonTransfer.jsontransform(personalData)
-    try:
-        print(items['userID'])
-    except:
-        print("None")
-    ref = db.collection(u'cguscholar').document((items['id']))
-    ref.collection(u'updateTime').document(
-        (items['personalData']['updateTime'])).set(items['cited'])
-    ref.set(items['personalData'])
+# def update_personaldata(personalData):
+#     personalDatadict = jsonTransfer.jsontransform(personalData)
+#     try:
+#         print(personalDatadict['userID'])
+#     except:
+#         print("None")
+#     ref = db.collection(u'cguscholar').document((items['id']))
+#     ref.collection(u'updateTime').document(
+#         (items['personalData']['updateTime'])).set(items['cited'])
+#     ref.set(items['personalData'])
 
 # labellist加入label domain
 
 
-def add_labeluserIDinfo(item, label):
-    items = jsonTransfer.jsontransform(item)
-    print(len(items['userID']))
-    ref = db.collection(u'Label-Domain').document(label)
-    ref.set(items)
+def add_labeluserIDinfo(item):
+    labeldict = jsonTransfer.jsontransform(item)
+    print(len(labeldict['userID']))
+    db.Label_Domain.update_one({'_id': labeldict['_id']}, {"$set": {"updateTime": labeldict['updateTime']}, "$addToSet": {
+        "userID": {"$each": labeldict['userID']}}})
 
 # 新增未被爬過的label
 
 
-def add_labeldomain(label):
-    for i in label:
-        ref = db.collection(u'Label-Domain').document(i)
-        doc = ref.get()
-        if not doc.exists:
-            ref.set({u'updateTime': None})
+def add_labeldomain(newlabel):
+    for label in newlabel:
+        labeldict = {"_id": label, "userID": [], "updateTime": None}
+        try:
+            db.Label_Domain.insert_one(labeldict)
+        except error:
+            print(error)
 
 # user profile updatetime
 
 
 def get_userupdatetime(ID):
-    users_ref = db.collection(u'cguscholar').document(ID)
-    doc = users_ref.get()
-    if doc.exists:
-        checkTemp = doc.to_dict()
-        Timestamp = checkTemp['updateTime']
-        return Timestamp
-    else:
+    try:
+        Timestamp = db.cguscholar.find_one({"_id":  ID})
+        return Timestamp['personalData']['updateTime']
+    except:
         return ('Not found')
+
 
 # v內容為空的labelname
 
@@ -66,8 +66,8 @@ def get_emptylabelname():
             break
         except:
             continue
-    print(emptylabelname)
-    return emptylabelname
+    print(type(emptylabelname['_id']))
+    return emptylabelname['_id']
 
 # v取得最久沒更新的label
 
@@ -81,10 +81,16 @@ def get_labelforCGUScholar():
             break
         except:
             continue
-    return label
+    return label['_id']
 
 
 if __name__ == '__main__':
-    A = db.Label_Domain.find_one(
-        {"$query": {}, "$orderby": {"updateTime": 1}})
-    print(A)
+
+    newlabel = ['Machine Learning', 'Causal Inference',
+                'Artificial Intelligence', 'Computational Photography', 'Statistics']
+    for label in newlabel:
+        labeldict = {"_id": label, "userID": [], "updateTime": None}
+        try:
+            db.Label_Domain.insert_one(labeldict)
+        except error:
+            print(error)

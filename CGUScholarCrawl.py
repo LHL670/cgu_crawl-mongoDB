@@ -69,7 +69,7 @@ def get_CiteBy(soup):
 
 def profileresult(soup, ID):
     infos = {}
-    infos['id'] = ID
+    infos['_id'] = ID
     infos['personalData'] = get_userprofile(soup)
     infos['cited'] = get_CiteBy(soup)
 

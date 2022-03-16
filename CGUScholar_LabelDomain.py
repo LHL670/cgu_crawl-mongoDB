@@ -1,5 +1,5 @@
 import time
-import manageFirebase
+import manageMongodb
 import checkDataformat
 import CGUScholarLabel
 
@@ -20,5 +20,5 @@ def LabelCrawl(label):  # if empty ,updatelabel is null
             print("label crawl fail!")
     else:
         print("label crawl fail!")
-    manageFirebase.add_labeluserIDinfo(labellist, label)
+    manageMongodb.add_labeluserIDinfo(labellist)
     print('label final')

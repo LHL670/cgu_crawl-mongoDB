@@ -1,4 +1,5 @@
 import collections
+from pickle import NONE
 from turtle import update
 from unicodedata import name
 import pymongo
@@ -13,8 +14,8 @@ dblst = cluster.list_database_names()
 print(dblst)
 test = {"_id": 'DZ-fHPAAAJ'}
 # post = {"$set": {"name": "test", "updaeTime": "2022-03-14 13:38:00"}}
-e = {'_id': 'pZ-fHPAAAJ',
-     'personalData': {'name': 'Bernhard Schölkopf',
+e = {'_id': 'cZ-fHPAAAJ',
+     'personalData': {'name': 'Bernhard Scholkopf',
                       'university': 'None',
                       'picture': 'https://scholar.googleusercontent.com/citations?view_op=view_photo&user=DZ-fHPgAAAAJ&citpid=2',
                       'label': ['Machine Learning',
@@ -22,15 +23,17 @@ e = {'_id': 'pZ-fHPAAAJ',
                                 'Artificial Intelligence',
                                 'Computational Photography',
                                 'Statistics'],
-                      'updateTime': None},
+                      'updateTime': '2021-10-21 13:52:00'},
      'cited': {'citations': {'All': '177951', 'Since2016': '80835'},
                'h_index': {'All': '163', 'Since2016': '115'},
                'i10_index': {'All': '577', 'Since2016': '484'}},
-     'citedRecord': [{'updateTime': '2021-10-09 13:52:05', 'cited': {'citations': {'All': '177951', 'Since2016': '80835'},
+     'citedRecord': [{'updateTime': '2021-10-21 13:52:00', 'cited': {'citations': {'All': '177951', 'Since2016': '80835'},
                                                                      'h_index': {'All': '163', 'Since2016': '115'},
                                                                      'i10_index': {'All': '577', 'Since2016': '484'}}}, {'updateTime': '2021-03-14 13:52:05', 'cited': {'citations': {'All': '177951', 'Since2016': '80835'},
                                                                                                                                                                         'h_index': {'All': '163', 'Since2016': '115'},
                                                                                                                                                                         'i10_index': {'All': '577', 'Since2016': '484'}}}]}
+newlabel = ['labeltest', 'labeltest2']
+# c={"_id":label,"userID":None,"updateTime":None}
 a = {"$push": {'citedRecord': {"$each": [{'updateTime': '2022-03-16 15:46:00', 'cited': {'citations': {'All': '177951', 'Since2016': '80835'},
                                                                                          'h_index': {'All': '163', 'Since2016': '115'},
                                                                                          'i10_index': {'All': '577', 'Since2016': '484'}}}]}}}
@@ -56,8 +59,14 @@ updatedata = merge_two_dicts(a, b)
 db2 = cluster["CGUScholar"]
 
 collection2 = db2["Label_Domain"]
-collection2.insert_one({'_id': 'testdomain4', 'userID': [
-    '-2z7muUAAAAJ', '-3IO6dcAAAAJ', '-3PESdQAAAAJ'], "updateTime": "2022-03-14 15:31:23"})
+k = {'_id': 'testdomain4', 'userID': [
+    '-pz7muUAAAAJ', '-4IO6dcAAAAJ', '-3PESdQAAAAJ'], "updateTime": "2022-03-21 15:31:23"}
+collection2.update_one({'_id': k['_id']}, {"$set": {"updateTime": k['updateTime']}, "$addToSet": {
+                       "userID": {"$each": k['userID']}}})
+# db3 = cluster["CGUScholar"]
+
+# collection3 = db3["cguscholar"]
+# collection3.insert_one(e)
 # myclient = pymongo.MongoClient(
 #     "mongodb+srv://CGUScholar:cguscholarpwd@cluster0.bpq9j.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 # mydb = myclient["testMongoDB"]
