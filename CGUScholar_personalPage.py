@@ -1,6 +1,5 @@
 import time
 import threading
-import manageFirebase
 import CGUScholarCrawl
 import checkDataformat
 import getIDQueue
