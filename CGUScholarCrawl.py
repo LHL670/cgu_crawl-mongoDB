@@ -72,6 +72,8 @@ def profileresult(soup, ID):
     infos['_id'] = ID
     infos['personalData'] = get_userprofile(soup)
     infos['cited'] = get_CiteBy(soup)
+    infos['citedRecord'] = [
+        {'updateTime': infos['personalData']['updateTime'], 'cited': infos['cited']}]
 
     return infos
 

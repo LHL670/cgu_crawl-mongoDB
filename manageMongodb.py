@@ -13,16 +13,28 @@ collection = db["test"]
 # 更新userprofile
 
 
-# def update_personaldata(personalData):
-#     personalDatadict = jsonTransfer.jsontransform(personalData)
-#     try:
-#         print(personalDatadict['userID'])
-#     except:
-#         print("None")
-#     ref = db.collection(u'cguscholar').document((items['id']))
-#     ref.collection(u'updateTime').document(
-#         (items['personalData']['updateTime'])).set(items['cited'])
-#     ref.set(items['personalData'])
+def merge_two_dicts(x, y):
+    z = x.copy()   # start with keys and values of x
+    z.update(y)    # modifies z with keys and values of y
+    return z
+
+
+def update_personaldata(personalData):
+    personalDatadict = jsonTransfer.jsontransform(personalData)
+    if db.cguscholar.count_documents({'_id': personalDatadict['_id']}, limit=1) != 0:
+
+        print(str(personalDatadict['_id'])+" exist")
+        a = {"$push": {'citedRecord': {
+            "$each": personalDatadict['citedRecord']}}}
+        b = {"$set": {
+            'updateTime': personalDatadict['updateTime'], 'cited': personalDatadict['cited']}}
+        ab = merge_two_dicts(a, b)
+        print(ab)
+        db.cguscholar.update_one({'_id': personalDatadict['_id']}, ab)
+    else:
+        print(str(personalDatadict['_id'])+" not found")
+        db.cguscholar.insert_one(personalDatadict)
+
 
 # labellist加入label domain
 
