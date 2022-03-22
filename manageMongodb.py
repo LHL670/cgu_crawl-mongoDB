@@ -82,7 +82,7 @@ def get_emptylabelname():
             break
         except:
             continue
-    print(type(emptylabelname['_id']))
+    # print(type(emptylabelname['_id']))
     return emptylabelname['_id']
 
 # v取得最久沒更新的label
