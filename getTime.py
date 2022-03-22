@@ -10,6 +10,7 @@ def currentTime():
 def check_expires(lastUpdate, expires):
     if lastUpdate == 'Not found':
         compare = True
+
     else:
         expires_format = datetime.datetime.strptime(
             lastUpdate, "%Y-%m-%d %H:%M:%S")

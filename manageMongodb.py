@@ -20,6 +20,7 @@ def merge_two_dicts(x, y):
 
 
 def update_personaldata(personalData):
+
     personalDatadict = jsonTransfer.jsontransform(personalData)
     if db.cguscholar.count_documents({'_id': personalDatadict['_id']}, limit=1) != 0:
 
@@ -29,7 +30,7 @@ def update_personaldata(personalData):
         b = {"$set": {
             'updateTime': personalDatadict['updateTime'], 'cited': personalDatadict['cited']}}
         ab = merge_two_dicts(a, b)
-        print(ab)
+        # print(ab)
         db.cguscholar.update_one({'_id': personalDatadict['_id']}, ab)
     else:
         print(str(personalDatadict['_id'])+" not found")
@@ -41,20 +42,23 @@ def update_personaldata(personalData):
 
 def add_labeluserIDinfo(item):
     labeldict = jsonTransfer.jsontransform(item)
-    print(len(labeldict['userID']))
+
     db.Label_Domain.update_one({'_id': labeldict['_id']}, {"$set": {"updateTime": labeldict['updateTime']}, "$addToSet": {
         "userID": {"$each": labeldict['userID']}}})
+    print("add_labeluserIDinfo: "+str(len(labeldict['userID'])))
 
 # 新增未被爬過的label
 
 
 def add_labeldomain(newlabel):
     for label in newlabel:
-        labeldict = {"_id": label, "userID": [], "updateTime": None}
-        try:
-            db.Label_Domain.insert_one(labeldict)
-        except error:
-            print(error)
+        if db.Label_Domain.count_documents({'_id': label}, limit=1) == 0:
+
+            labeldict = {"_id": label, "userID": [], "updateTime": None}
+            try:
+                db.Label_Domain.insert_one(labeldict)
+            except error:
+                print(error)
 
 # user profile updatetime
 
@@ -102,12 +106,11 @@ def get_labeldomainuserIDlist(label):
     return IDtemp
 
 
-if __name__ == '__main__':
-    label = 'Statistics'
-    label_ref = db.Label_Domain.find_one({'_id': label})
-    docs = label_ref['userID']
-    for i in docs:
-        print(i)
+# if __name__ == '__main__':
+#     label = 'Statistics'
+#     label_ref = db.Label_Domain.find_one({'_id': label})
+#     docs = label_ref['userID']
+#     print(len(docs))
     # print(docs)
     # IDtemp = docs.to_dict()
     # newlabel = ['Machine Learning', 'Causal Inference',

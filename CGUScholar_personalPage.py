@@ -1,3 +1,4 @@
+from cProfile import label
 import time
 import threading
 import CGUScholarCrawl
@@ -24,12 +25,14 @@ class CGUScholar(threading.Thread):
             except:
                 continue
             # ID和name 為空或格式錯誤時回傳False,格式錯誤修正後回傳rewriteInfo
+
             if(check_personalformat == True):
                 try:
                     fix_personalformat = checkDataformat.errorfixpersonalinfoformat(
                         personalinfo)
                     personalinfo = fix_personalformat
                 except:
+                    print('test')
                     continue
             manageMongodb.update_personaldata(personalinfo)
             manageMongodb.add_labeldomain(
@@ -81,8 +84,9 @@ if __name__ == '__main__':
 
     # update oldest label then crwal user profile
     while(1):
-        label = manageMongodb.get_labelforCGUScholar()
-        CGUScholar_LabelDomain.LabelCrawl(label)
+        label = 'High_Energy_Density_Physics'
+        # label = manageMongodb.get_labelforCGUScholar()
+        # CGUScholar_LabelDomain.LabelCrawl(label)
         CGUCrawlWorker(label)
         print("sleep 10 second!")
         time.sleep(10)

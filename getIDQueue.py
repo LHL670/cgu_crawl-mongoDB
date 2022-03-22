@@ -11,15 +11,15 @@ def get_IDqueue(label):
     # 將資料放入佇列
 
     IDtemp = manageMongodb.get_labeldomainuserIDlist(label)
-
+    print("check userID expires start")
     for i in IDtemp:
-        print(i)
+
         expire_time = manageMongodb.get_userupdatetime(i)
         if(getTime.check_expires(expire_time, 30)):
-
             IDQueue.put(i)
-            # number = number - 1
-        # ID_count = ID_count + 1
+    print("check userID expires end")
+    # number = number - 1
+    # ID_count = ID_count + 1
     # # 取五個過期或為爬過的ID
     # number = 100
     # ID_count = 0

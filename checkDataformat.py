@@ -4,7 +4,7 @@ import datetime
 
 def personalinfoformat(data):
     # check id format
-    if (data['id'][7::] != 'AAAAJ' or data['id'] == ' ' or data['id'] == None):
+    if (data['_id'][7::] != 'AAAAJ' or data['_id'] == ' ' or data['_id'] == None):
         return False
     # check personal data format
     if(data['personalData']['name'] == ' ' or data['personalData']['name'] == None):
@@ -14,6 +14,7 @@ def personalinfoformat(data):
 
 
 def errorfixpersonalinfoformat(data):
+
     rewriteData = data
     personalData = data['personalData']
     if(personalData['university'] == ' ' or personalData['university'] == '首頁' or personalData['university'] == None):
@@ -25,14 +26,14 @@ def errorfixpersonalinfoformat(data):
     if(len(personalData['label']) == 0):
         rewriteData['personalData']['label'] = 'None'
     # check updateTime format
-    if(personalData['updateTime'] == '' or personalData['updateTime'] == None):
-        rewriteData['personalData']['updateTime'] = getTime.currentTime()
+    if(data['updateTime'] == '' or data['updateTime'] == None):
+        rewriteData['updateTime'] = getTime.currentTime()
 
     try:
         datetime.datetime.strptime(
-            personalData['updateTime'], "%Y-%m-%d %H:%M:%S")
+            data['updateTime'], "%Y-%m-%d %H:%M:%S")
     except:
-        rewriteData['personalData']['updateTime'] = getTime.currentTime()
+        rewriteData['updateTime'] = getTime.currentTime()
     return rewriteData
 
 
@@ -47,7 +48,7 @@ def errorfixlabelinfoformat(data):
     rewriteData = data
     # check updateTime format
     if(data['updateTime'] == '' or data['updateTime'] == None):
-        rewriteData['personalData']['updateTime'] = getTime.currentTime()
+        rewriteData['updateTime'] = getTime.currentTime()
     try:
         datetime.datetime.strptime(
             data['updateTime'], "%Y-%m-%d %H:%M:%S")

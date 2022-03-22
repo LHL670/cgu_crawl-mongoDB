@@ -29,7 +29,7 @@ def get_userprofile(soup):
         ptemp = p.text.replace(" ", "_")
         label.append(ptemp)
     info['label'] = label
-    info['updateTime'] = getTime.currentTime()
+
     return info
 
 
@@ -71,9 +71,10 @@ def profileresult(soup, ID):
     infos = {}
     infos['_id'] = ID
     infos['personalData'] = get_userprofile(soup)
+    infos['updateTime'] = getTime.currentTime()
     infos['cited'] = get_CiteBy(soup)
     infos['citedRecord'] = [
-        {'updateTime': infos['personalData']['updateTime'], 'cited': infos['cited']}]
+        {'updateTime': infos['updateTime'], 'cited': infos['cited']}]
 
     return infos
 

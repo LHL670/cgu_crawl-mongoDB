@@ -4,7 +4,7 @@ import time
 
 
 def get_labelIDlist(label):
-    print(label)
+    print("get_labelIDlist : "+label)
     url = 'https://scholar.google.com.tw/citations?view_op=search_authors&hl=zh-TW&mauthors=label:' + label
     soup = get_requests.urlcontent(url)
 
@@ -42,7 +42,7 @@ def get_labelIDlist(label):
             soup = get_requests.urlcontent(url)
         except:
             searchPage == False
-            print('test')
+            print('crawl the end of the label')
             break
         time.sleep(2)
     Label['updateTime'] = getTime.currentTime()
