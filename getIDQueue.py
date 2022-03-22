@@ -1,8 +1,7 @@
-import firebase_db_connect
+
 import getTime
 import queue
-import manageFirebase
-db = firebase_db_connect.db()
+import manageMongodb
 
 
 def get_IDqueue(label):
@@ -10,13 +9,12 @@ def get_IDqueue(label):
     IDQueue = queue.Queue()
 
     # 將資料放入佇列
-    label_ref = db.collection(u'Label-Domain').document(label)
-    docs = label_ref.get()
-    IDtemp = docs.to_dict()
 
-    for i in IDtemp['userID']:
+    IDtemp = manageMongodb.get_labeldomainuserIDlist(label)
+
+    for i in IDtemp:
         print(i)
-        expire_time = manageFirebase.get_userupdatetime(i)
+        expire_time = manageMongodb.get_userupdatetime(i)
         if(getTime.check_expires(expire_time, 30)):
 
             IDQueue.put(i)

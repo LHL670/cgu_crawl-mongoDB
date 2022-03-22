@@ -96,13 +96,25 @@ def get_labelforCGUScholar():
     return label['_id']
 
 
-if __name__ == '__main__':
+def get_labeldomainuserIDlist(label):
+    label_ref = db.Label_Domain.find_one({'_id': label})
+    IDtemp = label_ref['userID']
+    return IDtemp
 
-    newlabel = ['Machine Learning', 'Causal Inference',
-                'Artificial Intelligence', 'Computational Photography', 'Statistics']
-    for label in newlabel:
-        labeldict = {"_id": label, "userID": [], "updateTime": None}
-        try:
-            db.Label_Domain.insert_one(labeldict)
-        except error:
-            print(error)
+
+if __name__ == '__main__':
+    label = 'Statistics'
+    label_ref = db.Label_Domain.find_one({'_id': label})
+    docs = label_ref['userID']
+    for i in docs:
+        print(i)
+    # print(docs)
+    # IDtemp = docs.to_dict()
+    # newlabel = ['Machine Learning', 'Causal Inference',
+    #             'Artificial Intelligence', 'Computational Photography', 'Statistics']
+    # for label in newlabel:
+    #     labeldict = {"_id": label, "userID": [], "updateTime": None}
+    #     try:
+    #         db.Label_Domain.insert_one(labeldict)
+    #     except error:
+    #         print(error)

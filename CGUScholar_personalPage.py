@@ -5,6 +5,7 @@ import checkDataformat
 import getIDQueue
 import CGUScholar_LabelDomain
 import requests
+import manageMongodb
 # Worker 類別，負責處理資料
 
 
@@ -30,8 +31,8 @@ class CGUScholar(threading.Thread):
                     personalinfo = fix_personalformat
                 except:
                     continue
-            manageFirebase.update_personaldata(personalinfo)
-            manageFirebase.add_labeldomain(
+            manageMongodb.update_personaldata(personalinfo)
+            manageMongodb.add_labeldomain(
                 personalinfo['personalData']['label'])
 
             time.sleep(1)
@@ -80,7 +81,7 @@ if __name__ == '__main__':
 
     # update oldest label then crwal user profile
     while(1):
-        label = manageFirebase.get_labelforCGUScholar()
+        label = manageMongodb.get_labelforCGUScholar()
         CGUScholar_LabelDomain.LabelCrawl(label)
         CGUCrawlWorker(label)
         print("sleep 10 second!")
