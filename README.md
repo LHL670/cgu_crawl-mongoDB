@@ -7,6 +7,7 @@ upload-json-to-firestore.py ./jsonFile/data.json set collection<br>
 pip install<br>
 pip3 install Beautifulsoup4<br>
 pip3 install requests<br>
-pip3 install --upgrade firebase-admin<br> 
+pip3 install pymongo<br>
+pip install "pymongo[srv]"<br> 
 
 
