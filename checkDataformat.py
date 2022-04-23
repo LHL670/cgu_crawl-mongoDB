@@ -55,3 +55,9 @@ def errorfixlabelinfoformat(data):
     except:
         rewriteData['updateTime'] = getTime.currentTime()
     return rewriteData
+
+
+def labelnameformat(labelname):
+    labelnametemp = labelname.replace(" ", "_")
+    labelname = labelnametemp.replace("-", "_")
+    return labelname

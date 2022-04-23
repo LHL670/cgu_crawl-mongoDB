@@ -1,6 +1,6 @@
 from distutils.log import error
 from itertools import count
-
+import checkDataformat
 import pymongo
 from pymongo import MongoClient
 import jsonTransfer
@@ -81,14 +81,15 @@ def get_emptylabelname():
     emptylabelname = ''
     while(1):
         try:
-            emptylabelname = db.Label_Domain.find_one({"updateTime":  None})
+            getemptylabelname = db.Label_Domain.find_one({"updateTime":  None})
+            emptylabelname = getemptylabelname['_id']
             break
         except:
             continue
+    # check labelname format
     if ' ' or '-' in emptylabelname:
-        delete_jsonfileby_id('Label_Domain',  emptylabelname['_id'])
-        emptylabelnametemp = emptylabelname['_id'].replace(" ", "_")
-        emptylabelname = emptylabelnametemp.replace("-", "_")
+        delete_jsonfileby_id('Label_Domain',  emptylabelname)
+        emptylabelname = checkDataformat.labelnameformat(emptylabelname)
 
     return emptylabelname
 
@@ -96,19 +97,19 @@ def get_emptylabelname():
 
 
 def get_labelforCGUScholar():
-    label = ''
+    labelname = ''
     while(1):
         try:
-            label = db.Label_Domain.find_one(
+            getlabelname = db.Label_Domain.find_one(
                 {"$query": {}, "$orderby": {"updateTime": 1}})
+            labelname = getlabelname['_id']
             break
         except:
             continue
-    if ' ' or '-' in label:
-        delete_jsonfileby_id('Label_Domain',  label['_id'])
-        labeltemp = label['_id'].replace(" ", "_")
-        label = labeltemp.replace("-", "_")
-    return label
+    if ' ' or '-' in labelname:
+        delete_jsonfileby_id('Label_Domain',  labelname)
+        labelname = checkDataformat.labelnameformat(labelname)
+    return labelname
 
 
 def get_labeldomainuserIDlist(label):
