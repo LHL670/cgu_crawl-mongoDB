@@ -7,6 +7,7 @@ import getIDQueue
 import CGUScholar_LabelDomain
 import requests
 import manageMongodb
+import random
 # Worker 類別，負責處理資料
 
 
@@ -37,8 +38,8 @@ class CGUScholar(threading.Thread):
             manageMongodb.update_personaldata(personalinfo)
             manageMongodb.add_labeldomain(
                 personalinfo['personalData']['label'])
-
-            time.sleep(1)
+            sleepTime = random.randint(1,3)
+            time.sleep(sleepTime)
 
 
 def CGUCrawlWorker(label):
@@ -88,7 +89,7 @@ if __name__ == '__main__':
         CGUScholar_LabelDomain.LabelCrawl(label)
         CGUCrawlWorker(label)
         print("sleep 10 second!")
-        time.sleep(10)
+        time.sleep(50)
 
     # update null label userID
 
