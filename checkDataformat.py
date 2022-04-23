@@ -4,7 +4,7 @@ import datetime
 
 def personalinfoformat(data):
     # check id format
-    if (data['_id'][7::] != 'AAAAJ' or data['_id'] == ' ' or data['_id'] == None):
+    if (len(data['_id']) != 12 or data['_id'] == ' ' or data['_id'] == None):
         return False
     # check personal data format
     if(data['personalData']['name'] == ' ' or data['personalData']['name'] == None):
