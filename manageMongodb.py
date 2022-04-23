@@ -8,7 +8,6 @@ cluster = MongoClient(
     "mongodb+srv://CGUScholar:cguscholarpwd@cluster0.bpq9j.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 db = cluster["CGUScholar"]
 
-collection = db["test"]
 
 # 更新userprofile
 
@@ -17,6 +16,10 @@ def merge_two_dicts(x, y):
     z = x.copy()   # start with keys and values of x
     z.update(y)    # modifies z with keys and values of y
     return z
+
+
+def delete_jsonfileby_id(collection, id):
+    db[collection].delete_one({"_id": id})
 
 
 def update_personaldata(personalData):
@@ -83,8 +86,10 @@ def get_emptylabelname():
         except:
             continue
     # print(type(emptylabelname['_id']))
+    delete_jsonfileby_id('Label_Domain',  emptylabelname['_id'])
     emptylabelnametemp = emptylabelname['_id'].replace(" ", "_")
     emptylabelname = emptylabelnametemp.replace("-", "_")
+
     return emptylabelname
 
 # v取得最久沒更新的label
@@ -99,7 +104,7 @@ def get_labelforCGUScholar():
             break
         except:
             continue
-    print('update'+str(label['updateTime']))
+    delete_jsonfileby_id('Label_Domain',  label['_id'])
     labeltemp = label['_id'].replace(" ", "_")
     label = labeltemp.replace("-", "_")
     return label
