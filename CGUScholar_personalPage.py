@@ -33,7 +33,7 @@ class CGUScholar(threading.Thread):
                         personalinfo)
                     personalinfo = fix_personalformat
                 except:
-                    print('test')
+                    # print('test')
                     continue
             manageMongodb.update_personaldata(personalinfo)
             manageMongodb.add_labeldomain(
@@ -88,8 +88,8 @@ if __name__ == '__main__':
         label = manageMongodb.get_labelforCGUScholar()
         CGUScholar_LabelDomain.LabelCrawl(label)
         CGUCrawlWorker(label)
-        print("sleep 30 second!")
-        time.sleep(30)
+        print("sleep 20 second!")
+        time.sleep(20)
 
     # update null label userID
 

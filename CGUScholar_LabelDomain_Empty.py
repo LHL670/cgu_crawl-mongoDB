@@ -10,4 +10,4 @@ if __name__ == '__main__':
     while(1):
         label = manageMongodb.get_emptylabelname()
         CGUScholar_LabelDomain.LabelCrawl(label)
-        time.sleep(5)
+        time.sleep(3)
