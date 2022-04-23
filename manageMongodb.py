@@ -66,7 +66,7 @@ def add_labeldomain(newlabel):
 def get_userupdatetime(ID):
     try:
         Timestamp = db.cguscholar.find_one({"_id":  ID})
-        return Timestamp['personalData']['updateTime']
+        return Timestamp['updateTime']
     except:
         return ('Not found')
 
@@ -99,6 +99,7 @@ def get_labelforCGUScholar():
             break
         except:
             continue
+    print('update'+str(label['updateTime']))
     labeltemp = label['_id'].replace(" ", "_")
     label = labeltemp.replace("-", "_")
     return label
