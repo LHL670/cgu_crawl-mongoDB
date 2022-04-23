@@ -63,6 +63,16 @@ def add_labeldomain(newlabel):
             except error:
                 print(error)
 
+def adjust_labelname(newlabel):
+    
+    if db.Label_Domain.count_documents({'_id': newlabel}, limit=1) == 0:
+
+        labeldict = {"_id": newlabel, "userID": [], "updateTime": None}
+        try:
+            db.Label_Domain.insert_one(labeldict)
+        except error:
+            print(error)
+
 # user profile updatetime
 
 
@@ -90,6 +100,7 @@ def get_emptylabelname():
     if ' ' or '-' in emptylabelname:
         delete_jsonfileby_id('Label_Domain',  emptylabelname)
         emptylabelname = checkDataformat.labelnameformat(emptylabelname)
+        adjust_labelname(emptylabelname)
 
     return emptylabelname
 
@@ -109,7 +120,7 @@ def get_labelforCGUScholar():
     if ' ' or '-' in labelname:
         delete_jsonfileby_id('Label_Domain',  labelname)
         labelname = checkDataformat.labelnameformat(labelname)
-    print(labelname)
+        adjust_labelname(labelname)
     return labelname
 
 

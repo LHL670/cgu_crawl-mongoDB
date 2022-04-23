@@ -1,21 +1,30 @@
 import time
 import requests
 from bs4 import BeautifulSoup
-
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 def urlcontent(url):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36', 'Connention': 'close'
     }
+    proxies={"https": "http://0.0.0.0:8888"}
     while 1:
         try:
-            r = requests.get(url, headers=headers, proxies={
-                "https": "http://0.0.0.0:8888"}).text
+            session = requests.Session()
+            retry = Retry(connect=3, backoff_factor=0.5)
+            adapter = HTTPAdapter(max_retries=retry)
+            session.mount('http://', adapter)
+            session.mount('https://', adapter)
+            session.proxies.update(proxies)
+
+            res = session.get(url, headers=headers)
+            res = res.text
             break
-        except:
-            print("request error.sleep 1 min and restart")
+        except Exception as e:
+            print("request error.sleep 1 min and restart" + str(e))
             time.sleep(60)
             continue
 
-    soup = BeautifulSoup(r, "html.parser")
+    soup = BeautifulSoup(res, "html.parser")
     return soup
