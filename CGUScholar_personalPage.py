@@ -88,8 +88,8 @@ if __name__ == '__main__':
         label = manageMongodb.get_labelforCGUScholar()
         CGUScholar_LabelDomain.LabelCrawl(label)
         CGUCrawlWorker(label)
-        print("sleep 10 second!")
-        time.sleep(50)
+        print("sleep 30 second!")
+        time.sleep(30)
 
     # update null label userID
 

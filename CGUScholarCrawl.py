@@ -26,7 +26,8 @@ def get_userprofile(soup):
         info['picture'] = 'https://scholar.google.com.tw/citations/images/avatar_scholar_128.png'
     label = []
     for p in soup.find_all('a', class_='gsc_prf_inta gs_ibl'):
-        ptemp = p.text.replace(" ", "_")
+        ptemp1 = p.text.replace(" ", "_")
+        ptemp = ptemp1.text.replace("-", "_")
         label.append(ptemp)
     info['label'] = label
 

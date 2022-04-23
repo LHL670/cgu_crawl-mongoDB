@@ -83,7 +83,9 @@ def get_emptylabelname():
         except:
             continue
     # print(type(emptylabelname['_id']))
-    return emptylabelname['_id']
+    emptylabelnametemp = emptylabelname['_id'].replace(" ", "_")
+    emptylabelname = emptylabelnametemp.replace("-", "_")
+    return emptylabelname
 
 # v取得最久沒更新的label
 
@@ -97,7 +99,9 @@ def get_labelforCGUScholar():
             break
         except:
             continue
-    return label['_id']
+    labeltemp = label['_id'].replace(" ", "_")
+    label = labeltemp.replace("-", "_")
+    return label
 
 
 def get_labeldomainuserIDlist(label):

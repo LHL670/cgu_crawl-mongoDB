@@ -16,9 +16,10 @@ def LabelCrawl(label):  # if empty ,updatelabel is null
             fix_labelformat = checkDataformat.errorfixlabelinfoformat(
                 labellist)
             labellist = fix_labelformat
+            manageMongodb.add_labeluserIDinfo(labellist)
         except:
             print("label crawl fail!")
     else:
         print("label crawl fail!")
-    manageMongodb.add_labeluserIDinfo(labellist)
+    
     print('label final')
