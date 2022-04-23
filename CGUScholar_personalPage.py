@@ -7,6 +7,7 @@ import getIDQueue
 import CGUScholar_LabelDomain
 import requests
 import manageMongodb
+import random
 # Worker 類別，負責處理資料
 
 
@@ -32,13 +33,13 @@ class CGUScholar(threading.Thread):
                         personalinfo)
                     personalinfo = fix_personalformat
                 except:
-                    print('test')
+                    # print('test')
                     continue
             manageMongodb.update_personaldata(personalinfo)
             manageMongodb.add_labeldomain(
                 personalinfo['personalData']['label'])
-
-            time.sleep(1)
+            sleepTime = random.randint(1, 3)
+            time.sleep(sleepTime)
 
 
 def CGUCrawlWorker(label):
@@ -84,12 +85,11 @@ if __name__ == '__main__':
 
     # update oldest label then crwal user profile
     while(1):
-        # label = 'High_Energy_Density_Physics'
         label = manageMongodb.get_labelforCGUScholar()
         CGUScholar_LabelDomain.LabelCrawl(label)
         CGUCrawlWorker(label)
-        print("sleep 10 second!")
-        time.sleep(10)
+        print("sleep 20 second!")
+        time.sleep(20)
 
     # update null label userID
 

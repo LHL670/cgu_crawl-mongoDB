@@ -1,6 +1,7 @@
 import get_requests
 import getTime
 import time
+import random
 
 
 def get_labelIDlist(label):
@@ -44,7 +45,8 @@ def get_labelIDlist(label):
             searchPage == False
             print('crawl the end of the label')
             break
-        time.sleep(2)
+        sleeptime = random.randint(1,2)
+        time.sleep(sleeptime)
     Label['updateTime'] = getTime.currentTime()
     Label['_id'] = label
     return Label

@@ -66,7 +66,7 @@ def add_labeldomain(newlabel):
 def get_userupdatetime(ID):
     try:
         Timestamp = db.cguscholar.find_one({"_id":  ID})
-        return Timestamp['personalData']['updateTime']
+        return Timestamp['updateTime']
     except:
         return ('Not found')
 
@@ -83,7 +83,9 @@ def get_emptylabelname():
         except:
             continue
     # print(type(emptylabelname['_id']))
-    return emptylabelname['_id']
+    emptylabelnametemp = emptylabelname['_id'].replace(" ", "_")
+    emptylabelname = emptylabelnametemp.replace("-", "_")
+    return emptylabelname
 
 # v取得最久沒更新的label
 
@@ -97,7 +99,10 @@ def get_labelforCGUScholar():
             break
         except:
             continue
-    return label['_id']
+    print('update'+str(label['updateTime']))
+    labeltemp = label['_id'].replace(" ", "_")
+    label = labeltemp.replace("-", "_")
+    return label
 
 
 def get_labeldomainuserIDlist(label):
