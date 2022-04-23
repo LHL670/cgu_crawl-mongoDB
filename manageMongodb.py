@@ -85,10 +85,10 @@ def get_emptylabelname():
             break
         except:
             continue
-    # print(type(emptylabelname['_id']))
-    delete_jsonfileby_id('Label_Domain',  emptylabelname['_id'])
-    emptylabelnametemp = emptylabelname['_id'].replace(" ", "_")
-    emptylabelname = emptylabelnametemp.replace("-", "_")
+    if ' ' or '-' in emptylabelname:
+        delete_jsonfileby_id('Label_Domain',  emptylabelname['_id'])
+        emptylabelnametemp = emptylabelname['_id'].replace(" ", "_")
+        emptylabelname = emptylabelnametemp.replace("-", "_")
 
     return emptylabelname
 
@@ -104,9 +104,10 @@ def get_labelforCGUScholar():
             break
         except:
             continue
-    delete_jsonfileby_id('Label_Domain',  label['_id'])
-    labeltemp = label['_id'].replace(" ", "_")
-    label = labeltemp.replace("-", "_")
+    if ' ' or '-' in label:
+        delete_jsonfileby_id('Label_Domain',  label['_id'])
+        labeltemp = label['_id'].replace(" ", "_")
+        label = labeltemp.replace("-", "_")
     return label
 
 
