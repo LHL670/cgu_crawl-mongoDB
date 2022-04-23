@@ -109,6 +109,7 @@ def get_labelforCGUScholar():
     if ' ' or '-' in labelname:
         delete_jsonfileby_id('Label_Domain',  labelname)
         labelname = checkDataformat.labelnameformat(labelname)
+    print(labelname)
     return labelname
 
 
