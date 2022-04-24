@@ -22,8 +22,8 @@ def urlcontent(url):
             res = res.text
             break
         except Exception as e:
-            print("request error.sleep 1 min and restart" + str(e))
-            time.sleep(60)
+            print("request error.sleep 10 second and restart" + str(e))
+            time.sleep(10)
             continue
 
     soup = BeautifulSoup(res, "html.parser")

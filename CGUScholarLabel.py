@@ -45,7 +45,7 @@ def get_labelIDlist(label):
             searchPage == False
             print('crawl the end of the label')
             break
-        sleeptime = random.randint(1,2)
+        sleeptime = random.uniform(0.3,0.5)
         time.sleep(sleeptime)
     Label['updateTime'] = getTime.currentTime()
     Label['_id'] = label

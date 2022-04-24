@@ -38,7 +38,7 @@ class CGUScholar(threading.Thread):
             manageMongodb.update_personaldata(personalinfo)
             manageMongodb.add_labeldomain(
                 personalinfo['personalData']['label'])
-            sleepTime = random.randint(1, 3)
+            sleepTime = random.uniform(0.5, 0.8)
             time.sleep(sleepTime)
 
 
@@ -88,8 +88,8 @@ if __name__ == '__main__':
         label = manageMongodb.get_labelforCGUScholar()
         CGUScholar_LabelDomain.LabelCrawl(label)
         CGUCrawlWorker(label)
-        print("sleep 20 second!")
-        time.sleep(20)
+        print("sleep 5 second!")
+        time.sleep(5)
 
     # update null label userID
 
