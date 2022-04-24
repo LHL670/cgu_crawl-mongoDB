@@ -86,7 +86,7 @@ if __name__ == '__main__':
     # update oldest label then crwal user profile
     while(1):
         label = manageMongodb.get_labelforCGUScholar()
-        # CGUScholar_LabelDomain.LabelCrawl(label)
+        CGUScholar_LabelDomain.LabelCrawl(label)
         CGUCrawlWorker(label)
         print("sleep 5 second!")
         time.sleep(5)

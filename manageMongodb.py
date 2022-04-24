@@ -63,18 +63,6 @@ def add_labeldomain(newlabel):
             except error:
                 print(error)
 
-
-def adjust_labelname(newlabel):
-
-    if db.Label_Domain.count_documents({'_id': newlabel}, limit=1) == 0:
-
-        labeldict = {"_id": newlabel, "userID": [], "updateTime": None}
-        try:
-            db.Label_Domain.insert_one(labeldict)
-        except error:
-            print(error)
-
-
 def adjust_labelname(labelname):
     delete_jsonfileby_id('Label_Domain',  labelname)
     newlabel = checkDataformat.labelnameformat(labelname)
@@ -123,8 +111,7 @@ def get_labelforCGUScholar():
     while(1):
         try:
             # label has been crawled
-            getlabelname = db.Label_Domain.find_one(
-                {"updateTime": {"$ne": None}})
+            getlabelname = db.Label_Domain.find({"updateTime": {"$ne": None}}).sort("updateTime",1)[0]
             if len(getlabelname['userID']) == 0:
                 continue
 

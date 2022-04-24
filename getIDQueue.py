@@ -5,6 +5,7 @@ import manageMongodb
 
 
 def get_IDqueue(label):
+    print('GET label : '+str(label))
     # 建立佇列
     IDQueue = queue.Queue()
 
