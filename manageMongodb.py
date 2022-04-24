@@ -112,15 +112,16 @@ def get_labelforCGUScholar():
         try:
             # label has been crawled
             getlabelname = db.Label_Domain.find({"updateTime": {"$ne": None}}).sort("updateTime",1)[0]
+            labelname = getlabelname['_id']
             if len(getlabelname['userID']) == 0:
+                adjust_labelname(labelname)
                 continue
 
             # check labelname format
             if '-' in labelname or ' ' in labelname:
                 adjust_labelname(labelname)
                 continue
-
-            labelname = getlabelname['_id']
+            
             break
         except:
             continue
