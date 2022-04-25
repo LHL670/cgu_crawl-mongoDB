@@ -5,7 +5,7 @@ import CGUScholarLabel
 
 
 def LabelCrawl(label):  # if empty ,updatelabel is null
-    print('label : ' + label + 'start')
+    print('label start ' + label )
 
     labellist = CGUScholarLabel.get_labelIDlist(label)
     check_labelformat = checkDataformat.labelinfoformat(labellist)
@@ -22,4 +22,4 @@ def LabelCrawl(label):  # if empty ,updatelabel is null
     else:
         print('label ' + label + 'crawl fail!')
 
-    print('label ' + label + 'final')
+    print('label final ' + label )

@@ -35,7 +35,7 @@ def get_labelIDlist(label):
             # running check
 
             if (int(page) % 500 == 0):
-                print(label + ' ' + page)
+                print(page + ' ' + label)
 
             url = 'https://scholar.google.com.tw/citations?view_op=search_authors&hl=zh-TW&mauthors=label:' + \
                 label+'&after_author='+afterAuthor+'&astart='+page
