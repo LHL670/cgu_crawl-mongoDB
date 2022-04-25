@@ -63,8 +63,10 @@ def add_labeldomain(newlabel):
             except error:
                 print(error)
 
-def adjust_labelname(newlabel):
-    
+def adjust_labelname(labelname):
+    delete_jsonfileby_id('Label_Domain',  labelname)
+    newlabel = checkDataformat.labelnameformat(labelname)
+
     if db.Label_Domain.count_documents({'_id': newlabel}, limit=1) == 0:
 
         labeldict = {"_id": newlabel, "userID": [], "updateTime": None}
@@ -86,7 +88,6 @@ def get_userupdatetime(ID):
 
 # v內容為空的labelname
 
-
 def get_emptylabelname():
     emptylabelname = ''
     while(1):
@@ -97,9 +98,7 @@ def get_emptylabelname():
         except:
             continue
     # check labelname format
-    if ' ' or '-' in emptylabelname:
-        delete_jsonfileby_id('Label_Domain',  emptylabelname)
-        emptylabelname = checkDataformat.labelnameformat(emptylabelname)
+    if '-' in emptylabelname or ' ' in emptylabelname:
         adjust_labelname(emptylabelname)
 
     return emptylabelname
@@ -111,16 +110,21 @@ def get_labelforCGUScholar():
     labelname = ''
     while(1):
         try:
-            getlabelname = db.Label_Domain.find_one(
-                {"$query": {}, "$orderby": {"updateTime": 1}})
+            # label has been crawled
+            getlabelname = db.Label_Domain.find({"updateTime": {"$ne": None}}).sort("updateTime",1)[0]
             labelname = getlabelname['_id']
+            if len(getlabelname['userID']) == 0:
+                adjust_labelname(labelname)
+                continue
+
+            # check labelname format
+            if '-' in labelname or ' ' in labelname:
+                adjust_labelname(labelname)
+                continue
+            
             break
         except:
             continue
-    if ' ' or '-' in labelname:
-        delete_jsonfileby_id('Label_Domain',  labelname)
-        labelname = checkDataformat.labelnameformat(labelname)
-        adjust_labelname(labelname)
     return labelname
 
 
