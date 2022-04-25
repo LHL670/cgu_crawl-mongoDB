@@ -49,7 +49,8 @@ def add_labeluserIDinfo(item):
 
     db.Label_Domain.update_one({'_id': labeldict['_id']}, {"$set": {"updateTime": labeldict['updateTime']}, "$addToSet": {
         "userID": {"$each": labeldict['userID']}}})
-    print("add_labeluserIDinfo: "+str(len(labeldict['userID'])))
+    print("add_labeluserIDinfo: " +
+          labeldict['_id']+' : '+str(len(labeldict['userID'])))
 
 # 新增未被爬過的label
 

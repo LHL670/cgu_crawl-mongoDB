@@ -5,7 +5,7 @@ import CGUScholarLabel
 
 
 def LabelCrawl(label):  # if empty ,updatelabel is null
-    print('label start')
+    print('label : ' + label + 'start')
 
     labellist = CGUScholarLabel.get_labelIDlist(label)
     check_labelformat = checkDataformat.labelinfoformat(labellist)
@@ -18,8 +18,8 @@ def LabelCrawl(label):  # if empty ,updatelabel is null
             labellist = fix_labelformat
             manageMongodb.add_labeluserIDinfo(labellist)
         except:
-            print("label crawl fail!")
+            print('label ' + label + 'crawl fail!')
     else:
-        print("label crawl fail!")
-    
-    print('label final')
+        print('label ' + label + 'crawl fail!')
+
+    print('label ' + label + 'final')
