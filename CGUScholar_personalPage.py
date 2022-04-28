@@ -38,7 +38,7 @@ class CGUScholar(threading.Thread):
             manageMongodb.update_personaldata(personalinfo)
             manageMongodb.add_labeldomain(
                 personalinfo['personalData']['label'])
-            sleepTime = random.uniform(0.1, 0.3)
+            sleepTime = random.uniform(0.05, 0.1)
             time.sleep(sleepTime)
 
 

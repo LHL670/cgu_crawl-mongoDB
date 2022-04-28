@@ -2,6 +2,7 @@ import time
 import manageMongodb
 import checkDataformat
 import CGUScholarLabel
+import manageMongodb
 
 
 def LabelCrawl(label):  # if empty ,updatelabel is null
@@ -18,8 +19,10 @@ def LabelCrawl(label):  # if empty ,updatelabel is null
             labellist = fix_labelformat
             manageMongodb.add_labeluserIDinfo(labellist)
         except:
-            print('label ' + label + 'crawl fail!')
+            print('label ' + label + ' format fail!')
+            manageMongodb.delete_jsonfileby_id('Label_Domain',  label)
     else:
-        print('label ' + label + 'crawl fail!')
+        print('label ' + label + ' crawl fail!')
+        manageMongodb.delete_jsonfileby_id('Label_Domain',  label)
 
     print('label final ' + label )
