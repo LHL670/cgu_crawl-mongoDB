@@ -20,9 +20,11 @@ def LabelCrawl(label):  # if empty ,updatelabel is null
             manageMongodb.add_labeluserIDinfo(labellist)
         except:
             print('label ' + label + ' format fail!')
-            manageMongodb.delete_jsonfileby_id('Label_Domain',  label)
+            # manageMongodb.delete_jsonfileby_id('Label_Domain',  label)
     else:
         print('label ' + label + ' crawl fail!')
-        manageMongodb.delete_jsonfileby_id('Label_Domain',  label)
+        time.sleep(60)
+        # manageMongodb.delete_jsonfileby_id('Label_Domain',  label)
+        manageMongodb.adjust_labelname(label)
 
     print('label final ' + label )
