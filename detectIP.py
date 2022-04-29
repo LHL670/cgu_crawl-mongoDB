@@ -11,7 +11,7 @@ def getcurrentIP():
                             "http": "http://0.0.0.0:8888"}).text
     
     ip = json.loads(ip)
-    print(type(ip))
+    # print(type(ip))
 
     return ip['origin']
         

@@ -3,6 +3,7 @@ import manageMongodb
 import checkDataformat
 import CGUScholarLabel
 import manageMongodb
+import detectIP
 
 
 def LabelCrawl(label):  # if empty ,updatelabel is null
@@ -23,8 +24,6 @@ def LabelCrawl(label):  # if empty ,updatelabel is null
             # manageMongodb.delete_jsonfileby_id('Label_Domain',  label)
     else:
         print('label ' + label + ' crawl fail!')
-        time.sleep(60)
-        # manageMongodb.delete_jsonfileby_id('Label_Domain',  label)
         manageMongodb.adjust_labelname(label)
-
+        detectIP.detectIPchange()
     print('label final ' + label )
