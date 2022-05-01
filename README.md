@@ -10,4 +10,7 @@ pip3 install requests<br>
 pip3 install pymongo<br>
 pip install "pymongo[srv]"<br> 
 
+INSTALL DETAIL<br>
+https://changgunguniversity-my.sharepoint.com/:w:/g/personal/b0829059_cgu_edu_tw/EWhvzFFbNphLmV6yVNTjO24BwlIeuL7HnttPsAy3DdyAlg?rtime=WDBe6pYr2kg<br>
+
 
