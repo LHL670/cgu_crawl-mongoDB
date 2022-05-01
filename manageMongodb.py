@@ -47,7 +47,7 @@ def update_personaldata(personalData):
 def add_labeluserIDinfo(item):
     labeldict = jsonTransfer.jsontransform(item)
 
-    db.Label_Domain.update_one({'_id': labeldict['_id']}, {"$set": {"updateTime": labeldict['updateTime']}, "$addToSet": {
+    db.LabelDomain.update_one({'_id': labeldict['_id']}, {"$set": {"updateTime": labeldict['updateTime']}, "$addToSet": {
         "userID": {"$each": labeldict['userID']}}})
     print("add_labeluserIDinfo: " +
           labeldict['_id']+' : '+str(len(labeldict['userID'])))
@@ -57,24 +57,24 @@ def add_labeluserIDinfo(item):
 
 def add_labeldomain(newlabel):
     for label in newlabel:
-        if db.Label_Domain.count_documents({'_id': label}, limit=1) == 0:
+        if db.LabelDomain.count_documents({'_id': label}, limit=1) == 0:
 
             labeldict = {"_id": label, "userID": [], "updateTime": None}
             try:
-                db.Label_Domain.insert_one(labeldict)
+                db.LabelDomain.insert_one(labeldict)
             except error:
                 print(error)
 
 
 def adjust_labelname(labelname):
-    delete_jsonfileby_id('Label_Domain',  labelname)
+    delete_jsonfileby_id('LabelDomain',  labelname)
     newlabel = checkDataformat.labelnameformat(labelname)
 
-    if db.Label_Domain.count_documents({'_id': newlabel}, limit=1) == 0:
+    if db.LabelDomain.count_documents({'_id': newlabel}, limit=1) == 0:
 
         labeldict = {"_id": newlabel, "userID": [], "updateTime": None}
         try:
-            db.Label_Domain.insert_one(labeldict)
+            db.LabelDomain.insert_one(labeldict)
         except error:
             print(error)
 
@@ -97,7 +97,7 @@ def get_emptylabelname():
     labelcount = 0
     while labelcount < 100:
         try:
-            getemptylabelname = db.Label_Domain.find(
+            getemptylabelname = db.LabelDomain.find(
                 {"updateTime":  None})[labelcount]
             emptylabelname = getemptylabelname['_id']
 
@@ -121,7 +121,7 @@ def get_labelforCGUScholar():
     while(1):
         try:
             # label has been crawled
-            getlabelname = db.Label_Domain.find(
+            getlabelname = db.LabelDomain.find(
                 {"updateTime": {"$ne": None}}).sort("updateTime", -1)[0]
             labelname = getlabelname['_id']
             if len(getlabelname['userID']) == 0:
@@ -145,7 +145,7 @@ def get_labelforupdateCGUScholaruserID():
     while labelcount < 100:
         try:
             # label has been crawled
-            getlabelname = db.Label_Domain.find(
+            getlabelname = db.LabelDomain.find(
                 {"updateTime": {"$ne": None}}).sort("updateTime", 1)[labelcount]
             labelname = getlabelname['_id']
 
@@ -163,6 +163,6 @@ def get_labelforupdateCGUScholaruserID():
 
 
 def get_labeldomainuserIDlist(label):
-    label_ref = db.Label_Domain.find_one({'_id': label})
+    label_ref = db.LabelDomain.find_one({'_id': label})
     IDtemp = label_ref['userID']
     return IDtemp
