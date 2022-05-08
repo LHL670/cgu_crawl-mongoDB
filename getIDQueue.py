@@ -16,7 +16,7 @@ def get_IDqueue(label):
     for i in IDtemp:
 
         expire_time = manageMongodb.get_userupdatetime(i)
-        if(getTime.check_expires(expire_time, 30)):
+        if(getTime.check_expires(expire_time, 7)):
             IDQueue.put(i)
     print("check userID expires end")
     # number = number - 1
