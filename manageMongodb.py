@@ -32,8 +32,10 @@ def update_personaldata(personalData):
         print(str(personalDatadict['_id'])+" exist")
         a = {"$push": {'citedRecord': {
             "$each": personalDatadict['citedRecord']}}}
-        b = {"$set": {
-            'updateTime': personalDatadict['updateTime'], 'cited': personalDatadict['cited']}}
+        b = {"$set": { 
+                        'personalData': personalDatadict['personalData'],
+                        'updateTime': personalDatadict['updateTime'], 
+                        'cited': personalDatadict['cited']}} 
         ab = merge_two_dicts(a, b)
         # print(ab)
         db.cguscholar.update_one({'_id': personalDatadict['_id']}, ab)
