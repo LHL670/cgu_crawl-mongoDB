@@ -14,11 +14,14 @@ def get_userprofile(soup):
         info['name'] = d.find('div', id='gsc_prf_in').text
     except:
         print('None')
-    # university
+    # university   
     try:
         info['university'] = d.find('a', class_='gsc_prf_ila').text
     except:
-        info['university'] = ' '
+        try:
+            info['university'] = d.find('a', class_='gsc_prf_il').text
+        except:
+            info['university'] = ' ' 
     # picture
     try:
         info['picture'] = soup.find('div', id='gsc_prf_pua').find('img')['src']

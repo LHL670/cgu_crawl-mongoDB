@@ -34,8 +34,8 @@ def get_labelIDlist(label):
 
             # running check
 
-            if (int(page) % 100 == 0):
-                print(page)
+            if (int(page) % 500 == 0):
+                print(page + ' ' + label)
 
             url = 'https://scholar.google.com.tw/citations?view_op=search_authors&hl=zh-TW&mauthors=label:' + \
                 label+'&after_author='+afterAuthor+'&astart='+page
@@ -43,9 +43,9 @@ def get_labelIDlist(label):
             soup = get_requests.urlcontent(url)
         except:
             searchPage == False
-            print('crawl the end of the label')
+            print('crawl the end of the label : ' + label)
             break
-        sleeptime = random.uniform(0.3,0.5)
+        sleeptime = random.uniform(0.05, 0.1)
         time.sleep(sleeptime)
     Label['updateTime'] = getTime.currentTime()
     Label['_id'] = label
