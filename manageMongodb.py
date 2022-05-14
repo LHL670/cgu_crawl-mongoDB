@@ -1,12 +1,10 @@
-from distutils.log import error
-from itertools import count
 import checkDataformat
 import queue
 import pymongo
 from pymongo import MongoClient
 import jsonTransfer
 # cluster = MongoClient(
-    # "mongodb+srv://CGUScholar:cguscholarpwd@cluster0.bpq9j.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+# "mongodb+srv://CGUScholar:cguscholarpwd@cluster0.bpq9j.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 cluster = MongoClient("mongodb://localhost:27017/")
 db = cluster["CGUScholar"]
 
@@ -32,10 +30,10 @@ def update_personaldata(personalData):
         print(str(personalDatadict['_id'])+" exist")
         a = {"$push": {'citedRecord': {
             "$each": personalDatadict['citedRecord']}}}
-        b = {"$set": { 
-                        'personalData': personalDatadict['personalData'],
-                        'updateTime': personalDatadict['updateTime'], 
-                        'cited': personalDatadict['cited']}} 
+        b = {"$set": {
+            'personalData': personalDatadict['personalData'],
+            'updateTime': personalDatadict['updateTime'],
+            'cited': personalDatadict['cited']}}
         ab = merge_two_dicts(a, b)
         # print(ab)
         db.cguscholar.update_one({'_id': personalDatadict['_id']}, ab)
@@ -55,6 +53,31 @@ def add_labeluserIDinfo(item):
     print("add_labeluserIDinfo: " +
           labeldict['_id']+' : '+str(len(labeldict['userID'])))
 
+
+def update_articles(id, articles):
+    articlesdict = {}
+    articlesdict['_id'] = id
+    articlesdict['Articles'] = articles
+    articlesdict = jsonTransfer.jsontransform(articlesdict)
+
+    if db.articles.count_documents({'_id': articlesdict['_id']}, limit=1) != 0:
+        for article in articlesdict['Articles']:
+
+            if db.articles.count_documents({'_id': articlesdict['_id'], 'Articles.title': article['title']}, limit=1) != 0:
+                print(article['cited_by_record'])
+
+                update_exist_cited_by_record = {
+                    "$push": {"Articles.$.cited_by_record": article['cited_by_record'][0]}}
+                db.articles.update_one(
+                    {'_id': articlesdict['_id'], 'Articles.title': article['title']}, update_exist_cited_by_record)
+            else:
+                update_notexist_cited_by_record = {
+                    "$push": {"Articles": article}}
+                db.articles.update_one(
+                    {'_id': articlesdict['_id']},  update_notexist_cited_by_record)
+    else:
+        print(str(articlesdict['_id'])+" not found")
+        db.articles.insert_one(articlesdict)
 # 新增未被爬過的label
 
 
