@@ -65,7 +65,7 @@ def update_articles(id, articles):
         for article in articlesdict['Articles']:
 
             if db.articles.count_documents({'_id': articlesdict['_id'], 'Articles.title': article['title']}, limit=1) != 0:
-                print(article['cited_by_record'])
+                # print(article['cited_by_record'])
 
                 update_exist_cited_by_record = {
                     "$push": {"Articles.$.cited_by_record": article['cited_by_record'][0]}}
@@ -76,8 +76,9 @@ def update_articles(id, articles):
                     "$push": {"Articles": article}}
                 db.articles.update_one(
                     {'_id': articlesdict['_id']},  update_notexist_cited_by_record)
+            print(str(articlesdict['_id'])+" update into articles collection")
     else:
-        print(str(articlesdict['_id'])+" not found")
+        print(str(articlesdict['_id'])+" not found in articles collection")
         db.articles.insert_one(articlesdict)
 # 新增未被爬過的label
 

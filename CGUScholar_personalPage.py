@@ -8,6 +8,8 @@ import CGUScholar_LabelDomain
 import requests
 import manageMongodb
 import random
+import webdriver
+import CGUScholar_articles
 # Worker 類別，負責處理資料
 
 
@@ -19,7 +21,9 @@ class CGUScholar(threading.Thread):
     def run(self):
         while self.queue.qsize() > 0:
             user_ID = self.queue.get()
-            personalinfo = CGUScholarCrawl.get_personalpage(user_ID)
+            soup = webdriver.Firefoxwebdriver(user_ID)
+            personalinfo = CGUScholarCrawl.get_personalpage(soup,user_ID)
+            articles = CGUScholar_articles.get_articles(soup)
             try:
                 check_personalformat = checkDataformat.personalinfoformat(
                     personalinfo)
@@ -38,6 +42,7 @@ class CGUScholar(threading.Thread):
             manageMongodb.update_personaldata(personalinfo)
             manageMongodb.add_labeldomain(
                 personalinfo['personalData']['label'])
+            manageMongodb.update_articles(user_ID,articles)
             sleepTime = random.uniform(0.05, 0.1)
             time.sleep(sleepTime)
 
