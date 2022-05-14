@@ -1,3 +1,4 @@
+from distutils.log import error
 import checkDataformat
 import queue
 import pymongo

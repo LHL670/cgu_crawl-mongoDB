@@ -1,8 +1,9 @@
 from selenium import webdriver  # 從library中引入webdriver
 from selenium.webdriver.common.by import By
-
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.chrome.options import Options
+import time
+from bs4 import BeautifulSoup
 
 
 def test(id):
