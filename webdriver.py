@@ -10,7 +10,15 @@ from bs4 import BeautifulSoup
 def Firefoxwebdriver(id):
     url = 'https://scholar.google.com.tw/citations?hl=zh-TW&user=' + id + '&pagesize=100'
     # chrome_options = Options()
-
+    options = Options()
+    options.add_argument('--headless')
+    # myProxy = '0.0.0.0:9050'
+    # ip, port = myProxy.split(":")
+    # driver = webdriver.FirefoxProfile()
+    # driver.set_preference('network.proxy.type', 1)
+    # driver.set_preference('network.proxy.socks', ip)
+    # driver.set_preference('network.proxy.socks_port', int(port))
+    # driver = webdriver.Firefox(driver,options=options)
     myProxy = '0.0.0.0:8888'
     ip, port = myProxy.split(":")
     driver = webdriver.FirefoxProfile()
@@ -20,8 +28,7 @@ def Firefoxwebdriver(id):
     driver.set_preference("network.proxy.share_proxy_settings", True)
     driver.set_preference("network.http.use-cache", False)
     driver.update_preferences()
-    options = Options()
-    options.add_argument('--headless')
+    
     driver = webdriver.Firefox(firefox_profile=driver,options=options)
     # driver = webdriver.Firefox()
     # driver.maximize_window()
