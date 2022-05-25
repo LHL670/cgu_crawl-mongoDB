@@ -7,7 +7,7 @@ import jsonTransfer
 # cluster = MongoClient(
 # "mongodb+srv://CGUScholar:cguscholarpwd@cluster0.bpq9j.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 cluster = MongoClient("mongodb://localhost:27017/")
-db = cluster["CGUScholar"]
+db = cluster["CGUScholar_com"]
 
 
 # 更新userprofile

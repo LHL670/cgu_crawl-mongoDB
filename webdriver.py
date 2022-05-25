@@ -43,13 +43,13 @@ def Firefoxwebdriver(id):
 
             while element.get_property('disabled'):
                 tempcount = tempcount + 1
-                time.sleep(0.05)
+                time.sleep(0.005)
 
                 # the end of the page
-                if tempcount > 50:
+                if tempcount > 80:
                     soup = BeautifulSoup(driver.page_source,"html.parser")
                     driver.quit()
-                    time.sleep(0.1)
+                    time.sleep(0.005)
                     return soup
             try:
                 element.click()
