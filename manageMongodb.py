@@ -1,5 +1,6 @@
 from distutils.log import error
 import checkDataformat
+import getTime
 import queue
 import pymongo
 from pymongo import MongoClient
@@ -59,6 +60,7 @@ def update_articles(id, articles):
     articlesdict = {}
     articlesdict['_id'] = id
     articlesdict['Articles'] = articles
+    articlesdict['updateTime'] = getTime.currentTime()
     articlesdict = jsonTransfer.jsontransform(articlesdict)
 
     if db.articles.count_documents({'_id': articlesdict['_id']}, limit=1) != 0:
@@ -76,7 +78,9 @@ def update_articles(id, articles):
                     "$push": {"Articles": article}}
                 db.articles.update_one(
                     {'_id': articlesdict['_id']},  update_notexist_cited_by_record)
-            print(str(articlesdict['_id'])+" update into articles collection")
+        db.articles.update_one({'_id': articlesdict['_id']}, {"$set":{'updateTime':articlesdict['updateTime']}})
+        print(str(articlesdict['_id'])+" update into articles collection")
+    
     else:
         print(str(articlesdict['_id'])+" not found in articles collection")
         db.articles.insert_one(articlesdict)
@@ -109,9 +113,9 @@ def adjust_labelname(labelname):
 # user profile updatetime
 
 
-def get_userupdatetime(ID):
+def get_userupdatetime(ID,collection):
     try:
-        Timestamp = db.cguscholar.find_one({"_id":  ID})
+        Timestamp = db[collection].find_one({"_id":  ID})
         return Timestamp['updateTime']
     except:
         return ('Not found')
@@ -194,3 +198,10 @@ def get_labeldomainuserIDlist(label):
     label_ref = db.LabelDomain.find_one({'_id': label})
     IDtemp = label_ref['userID']
     return IDtemp
+
+def get_userIDforarticlesupdate():
+    getuserID = []
+    getuserIDtemp = list(db.articles.find({}).sort("updateTime", 1).limit(1000))
+    for userID in getuserIDtemp:
+        getuserID.append(userID['_id'])
+    return getuserID

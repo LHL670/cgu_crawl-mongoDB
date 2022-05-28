@@ -4,7 +4,6 @@ import threading
 import CGUScholarCrawl
 import checkDataformat
 import getIDQueue
-import get_requests
 import manageMongodb
 import random
 import webdriver
@@ -12,7 +11,7 @@ import CGUScholar_articles
 # Worker 類別，負責處理資料
 
 
-class CGUScholar(threading.Thread):
+class CGUScholarbyarticles(threading.Thread):
     def __init__(self, CGUqueue):
         threading.Thread.__init__(self)
         self.queue = CGUqueue
@@ -20,9 +19,9 @@ class CGUScholar(threading.Thread):
     def run(self):
         while self.queue.qsize() > 0:
             user_ID = self.queue.get()
-            soup = get_requests.urlcontent(user_ID)
+            soup = webdriver.Firefoxwebdriver(user_ID)
             personalinfo = CGUScholarCrawl.get_personalpage(soup,user_ID)
-            # articles = CGUScholar_articles.get_articles(soup)
+            articles = CGUScholar_articles.get_articles(soup)
             try:
                 check_personalformat = checkDataformat.personalinfoformat(
                     personalinfo)
@@ -41,18 +40,18 @@ class CGUScholar(threading.Thread):
             manageMongodb.update_personaldata(personalinfo)
             manageMongodb.add_labeldomain(
                 personalinfo['personalData']['label'])
-            # manageMongodb.update_articles(user_ID,articles)
+            manageMongodb.update_articles(user_ID,articles)
             sleepTime = random.uniform(0.01, 0.05)
             time.sleep(sleepTime)
 
 
-def CGUCrawlWorker(label):
-    work_queue = getIDQueue.get_IDqueue_forprofile(label)
+def CGUCrawlWorker():
+    work_queue = getIDQueue.get_IDqueue_forarticles()
     # 建立兩個 Worker
-    CGUWorker1 = CGUScholar(work_queue)
-    CGUWorker2 = CGUScholar(work_queue)
-    CGUWorker3 = CGUScholar(work_queue)
-    CGUWorker4 = CGUScholar(work_queue)
+    CGUWorker1 = CGUScholarbyarticles(work_queue)
+    CGUWorker2 = CGUScholarbyarticles(work_queue)
+    CGUWorker3 = CGUScholarbyarticles(work_queue)
+    CGUWorker4 = CGUScholarbyarticles(work_queue)
 
     # 讓 Worker 開始處理資料
     CGUWorker1.start()
@@ -69,30 +68,10 @@ def CGUCrawlWorker(label):
     print("Done.")
 
 
-# def testdocker():
-#     while 1:
-#         url = 'http://httpbin.org/ip'
-#         headers = {
-#             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
-#         }
-#         ip = requests.get(url, headers=headers, proxies={
-#                           "http": "http://0.0.0.0:8888"}).text
-#         if ip:
-#             print(ip)
-#             time.sleep(10)
-#     return
-
-
-# 累積到一定得筆數upload firebase
 if __name__ == '__main__':
-    print('start')
-
-    # update oldest label then crwal user profile
+    print('start update by articles')   
     while(1):
-        label = manageMongodb.get_labelforCGUScholar()
-        print('GET label : ' + label)
-        # CGUScholar_LabelDomain.LabelCrawl(label)
-        CGUCrawlWorker(label)
+        CGUCrawlWorker()
         print("sleep 3 second!")
         time.sleep(3)
 
