@@ -3,13 +3,19 @@ import getTime
 
 def get_articles(soup):
     Articles = []
-    paperblock = soup.find('tbody', id='gsc_a_b').find_all(
+    try:
+        paperblock = soup.find('tbody', id='gsc_a_b').find_all(
         'tr', class_='gsc_a_tr')
+    except:
+        return None
 
     for papers in paperblock:
         article = {}
-        article['publication_date'] = papers.find('td', class_='gsc_a_y').find(
-            'span', class_='gsc_a_h gsc_a_hc gs_ibl').text
+        try:
+            article['publication_date'] = papers.find('td', class_='gsc_a_y').find(
+                'span', class_='gsc_a_h gsc_a_hc gs_ibl').text
+        except:
+            continue
         # if publication_date is not found then skip
         if article['publication_date'] == '':
             continue

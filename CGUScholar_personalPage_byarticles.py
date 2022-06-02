@@ -20,9 +20,12 @@ class CGUScholarbyarticles(threading.Thread):
         while self.queue.qsize() > 0:
             user_ID = self.queue.get()
             soup = webdriver.Firefoxwebdriver(user_ID)
-            personalinfo = CGUScholarCrawl.get_personalpage(soup,user_ID)
-            articles = CGUScholar_articles.get_articles(soup)
+            
             try:
+                personalinfo = CGUScholarCrawl.get_personalpage(soup,user_ID)
+                articles = CGUScholar_articles.get_articles(soup)
+                if articles == None:
+                    continue
                 check_personalformat = checkDataformat.personalinfoformat(
                     personalinfo)
             except:
