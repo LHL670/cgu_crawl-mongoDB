@@ -29,9 +29,10 @@ def Firefoxwebdriver(id):
     driver.set_preference("network.proxy.share_proxy_settings", True)
     driver.set_preference("network.http.use-cache", False)
     driver.update_preferences()
+    driver = webdriver.Firefox(firefox_profile=driver,options=options)
     # while 1:
     #     try:
-    driver = webdriver.Firefox(firefox_profile=driver,options=options)
+    
     # driver = webdriver.Firefox()
     # driver.maximize_window()
     driver.implicitly_wait(8)  # set waiting time
@@ -58,9 +59,16 @@ def Firefoxwebdriver(id):
             except:
                 continue
         except:
-            soup = BeautifulSoup(driver.page_source,"html.parser")
-            driver.quit()
-            break
+            try:
+                soup = BeautifulSoup(driver.page_source,"html.parser")
+                driver.quit()
+                break
+            except:
+                # soup = BeautifulSoup(driver.page_source,"html.parser")
+                driver.quit()
+                return None
+                break
+  
         # except Exception as e:
         #     print("request error.sleep 10 second and restart" + str(e))
         #     time.sleep(10)

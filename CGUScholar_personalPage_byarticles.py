@@ -20,7 +20,8 @@ class CGUScholarbyarticles(threading.Thread):
         while self.queue.qsize() > 0:
             user_ID = self.queue.get()
             soup = webdriver.Firefoxwebdriver(user_ID)
-            
+            if soup == None:
+                    continue
             try:
                 personalinfo = CGUScholarCrawl.get_personalpage(soup,user_ID)
                 articles = CGUScholar_articles.get_articles(soup)
