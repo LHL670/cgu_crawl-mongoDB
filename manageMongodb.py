@@ -5,6 +5,10 @@ import queue
 import pymongo
 from pymongo import MongoClient
 import jsonTransfer
+import os
+import docker
+import time
+
 # cluster = MongoClient(
 # "mongodb+srv://CGUScholar:cguscholarpwd@cluster0.bpq9j.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 cluster = MongoClient("mongodb://localhost:27017/")
@@ -13,13 +17,17 @@ db = cluster["CGUScholar_com"]
 
 
 def mongo_errorcheck():
-    try:
-        cluster.server_info()
+    while 1:
+        try:
+            cluster.server_info()
+            return
 
-    except Exception as err:
-        print(err)
-        print(getTime.getTime.currentTime)
-    return
+        except Exception as err:
+
+            print(err)
+            print(getTime.getTime.currentTime)
+            time.sleep(15)
+            os.system("docker restart Mongotest")
 
 # 更新userprofile
 
