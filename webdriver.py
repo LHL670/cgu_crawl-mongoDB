@@ -36,8 +36,8 @@ def Firefoxwebdriver(id):
     # driver = webdriver.Firefox()
     # driver.maximize_window()
     driver.implicitly_wait(8)  # set waiting time
-
-    driver.get(url)
+    driver.execute_script(f"location.href='{url}';")
+    # driver.get(url)
     while True:
         try:
             tempcount = 0

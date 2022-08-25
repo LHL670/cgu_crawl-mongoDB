@@ -13,7 +13,7 @@ def get_userprofile(soup):
     try:
         info['name'] = d.find('div', id='gsc_prf_in').text
     except:
-        print('None')
+        print('Skip')
    #university 
     try:        
         info['university'] = d.find('a', class_='gsc_prf_ila').text 
