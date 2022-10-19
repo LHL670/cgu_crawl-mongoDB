@@ -1,3 +1,4 @@
+from logging import error
 import get_requests
 import getTime
 
@@ -12,8 +13,10 @@ def get_userprofile(soup):
     # name
     try:
         info['name'] = d.find('div', id='gsc_prf_in').text
-    except:
-        print('Skip')
+
+    except Exception as e:
+        print('Skip : name format error ')
+        print(e)
    #university 
     try:        
         info['university'] = d.find('a', class_='gsc_prf_ila').text 
@@ -22,6 +25,7 @@ def get_userprofile(soup):
     except: 
         try: 
             info['university'] = d.find('div', class_='gsc_prf_il').text 
+            print(info['university'] )
         except: 
             info['university'] = ' ' 
     # picture

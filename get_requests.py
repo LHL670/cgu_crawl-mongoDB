@@ -27,5 +27,5 @@ def urlcontent(id):
             time.sleep(10)
             continue
 
-    soup = BeautifulSoup(res, "html.parser")
+    soup = BeautifulSoup(res, features="html.parser")
     return soup

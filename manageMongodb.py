@@ -25,7 +25,7 @@ def mongo_errorcheck():
         except Exception as err:
 
             print(err)
-            print(getTime.getTime.currentTime)
+            print(getTime.currentTime)
             time.sleep(15)
             os.system("docker restart Mongotest")
 
@@ -41,6 +41,7 @@ def merge_two_dicts(x, y):
 def delete_jsonfileby_id(collection, id):
     try:
         db[collection].delete_one({"_id": id})
+        print('Delete ' + id + ' from ' + collection)
     except:
         mongo_errorcheck()
 
@@ -151,7 +152,7 @@ def get_userupdatetime(ID,collection):
             Timestamp = db[collection].find_one({"_id":  ID})
             return Timestamp['updateTime']
         except:
-            return ('Not found')
+            return (None)
     except:
         mongo_errorcheck()
 
@@ -246,9 +247,10 @@ def get_labeldomainuserIDlist(label):
 def get_userIDforarticlesupdate():
     try:
         getuserID = []
-        getuserIDtemp = list(db.articles.find({}).sort("updateTime", 1).limit(1000))
+        getuserIDtemp = list(db.articles.find({}).sort("updateTime", 1).skip(1200).limit(1100))
         for userID in getuserIDtemp:
             getuserID.append(userID['_id'])
+        print(getuserID)
         return getuserID
     except:
         mongo_errorcheck()    

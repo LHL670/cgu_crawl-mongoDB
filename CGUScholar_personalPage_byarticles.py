@@ -26,7 +26,10 @@ class CGUScholarbyarticles(threading.Thread):
                 personalinfo = CGUScholarCrawl.get_personalpage(soup,user_ID)
                 articles = CGUScholar_articles.get_articles(soup)
                 if articles == None:
-                    continue
+                #    manageMongodb.delete_jsonfileby_id('articles', user_ID)
+                #    manageMongodb.delete_jsonfileby_id('cguscholar', user_ID)
+                   continue
+
                 check_personalformat = checkDataformat.personalinfoformat(
                     personalinfo)
             except:
@@ -39,8 +42,9 @@ class CGUScholarbyarticles(threading.Thread):
                         personalinfo)
                     personalinfo = fix_personalformat
                 except:
-                    # print('test')
+                    print(user_ID+' skip')
                     continue
+            
             manageMongodb.update_personaldata(personalinfo)
             manageMongodb.add_labeldomain(
                 personalinfo['personalData']['label'])
