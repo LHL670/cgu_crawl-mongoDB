@@ -143,7 +143,21 @@ def adjust_labelname(labelname):
                 print(error)
     except:
         mongo_errorcheck()
-# user profile updatetime
+def adjust_newestID(newestID,oldID):
+    try:
+        if db.cguscholar.count_documents({'_id': oldID}, limit=1) != 0:
+            profiledata = db.cguscholar.find_one({"_id": oldID})
+            profiledata['_id']=newestID
+            db.cguscholar.insert_one(profiledata)
+            delete_jsonfileby_id('cguscholar',  oldID)
+        if db.articles.count_documents({'_id': oldID}, limit=1) != 0:
+            articlesdata = db.cguscholar.find_one({"_id": oldID})        
+            articlesdata['_id']=newestID        
+            db.articles.insert_one(articlesdata)
+            delete_jsonfileby_id('articles',  oldID)
+        print('Adjust ID From ' + oldID + ' to ' +newestID)
+    except:
+        mongo_errorcheck()
 
 
 def get_userupdatetime(ID,collection):
@@ -247,7 +261,7 @@ def get_labeldomainuserIDlist(label):
 def get_userIDforarticlesupdate():
     try:
         getuserID = []
-        getuserIDtemp = list(db.articles.find({}).sort("updateTime", 1).skip(1200).limit(1100))
+        getuserIDtemp = list(db.articles.find({}).sort("updateTime", 1).limit(1000))
         for userID in getuserIDtemp:
             getuserID.append(userID['_id'])
         print(getuserID)

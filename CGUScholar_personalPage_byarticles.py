@@ -8,6 +8,8 @@ import manageMongodb
 import random
 import webdriver
 import CGUScholar_articles
+import get_requests
+import checkID
 # Worker 類別，負責處理資料
 
 
@@ -19,15 +21,24 @@ class CGUScholarbyarticles(threading.Thread):
     def run(self):
         while self.queue.qsize() > 0:
             user_ID = self.queue.get()
-            soup = webdriver.Firefoxwebdriver(user_ID)
+            url =  get_requests.urlcontent(user_ID)
+            #不存在
+            if url == None:
+                # manageMongodb.delete_jsonfileby_id('articles', user_ID)
+                # manageMongodb.delete_jsonfileby_id('cguscholar', user_ID)
+                continue
+            #確認ID是否變動
+            check_ID = checkID.getnewestID(url)
+            if check_ID != user_ID:
+                manageMongodb.adjust_newestID(check_ID,user_ID)#newestID,oldID
+            soup = webdriver.Firefoxwebdriver(url)
             if soup == None:
                     continue
             try:
                 personalinfo = CGUScholarCrawl.get_personalpage(soup,user_ID)
                 articles = CGUScholar_articles.get_articles(soup)
                 if articles == None:
-                #    manageMongodb.delete_jsonfileby_id('articles', user_ID)
-                #    manageMongodb.delete_jsonfileby_id('cguscholar', user_ID)
+
                    continue
 
                 check_personalformat = checkDataformat.personalinfoformat(
