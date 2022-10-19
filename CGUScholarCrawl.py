@@ -1,3 +1,4 @@
+from logging import error
 import get_requests
 import getTime
 
@@ -12,15 +13,20 @@ def get_userprofile(soup):
     # name
     try:
         info['name'] = d.find('div', id='gsc_prf_in').text
-    except:
-        print('None')
-    # university   
-    try:
-        info['university'] = d.find('a', class_='gsc_prf_ila').text
-    except:
-        try:
-            info['university'] = d.find('a', class_='gsc_prf_il').text
-        except:
+
+    except Exception as e:
+        print('Skip : name format error ')
+        print(e)
+   #university 
+    try:        
+        info['university'] = d.find('a', class_='gsc_prf_ila').text 
+        if info['university'] == '首頁': 
+            info['university'] = d.find('div', class_='gsc_prf_il').text 
+    except: 
+        try: 
+            info['university'] = d.find('div', class_='gsc_prf_il').text 
+            print(info['university'] )
+        except: 
             info['university'] = ' ' 
     # picture
     try:
@@ -83,7 +89,7 @@ def profileresult(soup, ID):
     return infos
 
 
-def get_personalpage(id):
-    url = 'https://scholar.google.com.tw/citations?hl=zh-TW&user=' + id
-    soup = get_requests.urlcontent(url)
+def get_personalpage(soup,id):
+    # url = 'https://scholar.google.com.tw/citations?hl=zh-TW&user=' + id
+    # soup = get_requests.urlcontent(url)
     return profileresult(soup, id)

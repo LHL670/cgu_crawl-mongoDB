@@ -8,7 +8,7 @@ def currentTime():
 
 
 def check_expires(lastUpdate, expires):
-    if lastUpdate == 'Not found':
+    if (lastUpdate == 'Not found') or (lastUpdate == None):
         compare = True
 
     else:
