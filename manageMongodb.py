@@ -145,17 +145,18 @@ def adjust_labelname(labelname):
         mongo_errorcheck()
 def adjust_newestID(newestID,oldID):
     try:
+        print('**Adjust ID From ' + oldID + ' to ' +newestID)
         if db.cguscholar.count_documents({'_id': oldID}, limit=1) != 0:
             profiledata = db.cguscholar.find_one({"_id": oldID})
             profiledata['_id']=newestID
             db.cguscholar.insert_one(profiledata)
             delete_jsonfileby_id('cguscholar',  oldID)
         if db.articles.count_documents({'_id': oldID}, limit=1) != 0:
-            articlesdata = db.cguscholar.find_one({"_id": oldID})        
+            articlesdata = db.articles.find_one({"_id": oldID})        
             articlesdata['_id']=newestID        
             db.articles.insert_one(articlesdata)
             delete_jsonfileby_id('articles',  oldID)
-        print('Adjust ID From ' + oldID + ' to ' +newestID)
+        
     except:
         mongo_errorcheck()
 

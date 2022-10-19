@@ -35,7 +35,7 @@ class CGUScholarbyarticles(threading.Thread):
             if soup == None:
                     continue
             try:
-                personalinfo = CGUScholarCrawl.get_personalpage(soup,user_ID)
+                personalinfo = CGUScholarCrawl.get_personalpage(soup,check_ID)
                 articles = CGUScholar_articles.get_articles(soup)
                 if articles == None:
 
@@ -59,7 +59,7 @@ class CGUScholarbyarticles(threading.Thread):
             manageMongodb.update_personaldata(personalinfo)
             manageMongodb.add_labeldomain(
                 personalinfo['personalData']['label'])
-            manageMongodb.update_articles(user_ID,articles)
+            manageMongodb.update_articles(check_ID,articles)
             sleepTime = random.uniform(0.01, 0.05)
             time.sleep(sleepTime)
 
