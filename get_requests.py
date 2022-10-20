@@ -13,6 +13,7 @@ def urlcontent(id):
     }
     proxies={"https": "http://0.0.0.0:8888"}
     url = 'https://scholar.google.com.tw/citations?hl=zh-TW&user=' + id
+    
     while 1:
         try:
             session = requests.Session()
@@ -29,7 +30,12 @@ def urlcontent(id):
             print("request error.sleep 10 second and restart" + str(e))
             time.sleep(10)
             continue
-
-    if response.status_code == requests.codes.ok:
-        
-        return response.url    
+    timeout = time.time() + 0.5
+    while 1:
+        if (response.status_code == requests.codes.ok) or (time.time() > timeout):            
+            break
+    if (response.status_code == requests.codes.ok):
+        return response.url
+    else:
+        return None
+     
