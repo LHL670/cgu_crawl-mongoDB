@@ -269,7 +269,7 @@ def get_labeldomainuserIDlist(label):
 def get_userIDforarticlesupdate():
     try:
         getuserID = []
-        getuserIDtemp = list(db.articles.find({}).sort("updateTime", 1).skip(50).limit(100))
+        getuserIDtemp = list(db.articles.find({}).sort("updateTime", 1).skip(50).limit(1000))
         for userID in getuserIDtemp:
             getuserID.append(userID['_id'])
         print(getuserID)
