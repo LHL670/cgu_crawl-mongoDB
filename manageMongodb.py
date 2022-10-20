@@ -152,7 +152,7 @@ def adjust_newestID(collection,newestID,oldID):
             print('**Adjust ID From ' + oldID + ' to ' +newestID + ' (' + collection + ')')
             if  db[collection].count_documents({'_id': newestID}, limit=1) != 0:
                 delete_jsonfileby_id(collection,  oldID)
-                
+
             if db[collection].count_documents({'_id': oldID}, limit=1) != 0:
                 profiledata = db[collection].find_one({"_id": oldID})                
                 profiledata['_id']=newestID
@@ -269,7 +269,7 @@ def get_labeldomainuserIDlist(label):
 def get_userIDforarticlesupdate():
     try:
         getuserID = []
-        getuserIDtemp = list(db.articles.find({}).sort("updateTime", 1).skip(50).limit(10))
+        getuserIDtemp = list(db.articles.find({}).sort("updateTime", 1).skip(50).limit(100))
         for userID in getuserIDtemp:
             getuserID.append(userID['_id'])
         print(getuserID)
