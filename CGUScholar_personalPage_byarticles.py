@@ -10,6 +10,7 @@ import webdriver
 import CGUScholar_articles
 import get_requests
 import checkID
+import recordtxt
 # Worker 類別，負責處理資料
 
 
@@ -24,13 +25,17 @@ class CGUScholarbyarticles(threading.Thread):
             url =  get_requests.urlcontent(user_ID)
             #不存在
             if url == None:
+                recordtxt.writetxt('None',user_ID)
+                print('l')
                 # manageMongodb.delete_jsonfileby_id('articles', user_ID)
                 # manageMongodb.delete_jsonfileby_id('cguscholar', user_ID)
                 continue
             #確認ID是否變動
             check_ID = checkID.getnewestID(url)
             if check_ID != user_ID:
-                manageMongodb.adjust_newestID(check_ID,user_ID)#newestID,oldID
+                recordtxt.writetxt(check_ID,user_ID)
+                manageMongodb.adjust_newestID('cguscholar',check_ID,user_ID)#newestID,oldID
+                manageMongodb.adjust_newestID('articles',check_ID,user_ID)
             soup = webdriver.Firefoxwebdriver(url)
             if soup == None:
                     continue

@@ -6,7 +6,7 @@ import pymongo
 from pymongo import MongoClient
 import jsonTransfer
 import os
-import docker
+import recordtxt
 import time
 
 # cluster = MongoClient(
@@ -20,13 +20,16 @@ def mongo_errorcheck():
     while 1:
         try:
             cluster.server_info()
+            time.sleep(1)
+            os.system("docker restart Mongotest")
+
             return
 
         except Exception as err:
 
             print(err)
             print(getTime.currentTime)
-            time.sleep(15)
+            time.sleep(5)
             os.system("docker restart Mongotest")
 
 # 更新userprofile
@@ -143,22 +146,26 @@ def adjust_labelname(labelname):
                 print(error)
     except:
         mongo_errorcheck()
-def adjust_newestID(newestID,oldID):
-    try:
-        print('**Adjust ID From ' + oldID + ' to ' +newestID)
-        if db.cguscholar.count_documents({'_id': oldID}, limit=1) != 0:
-            profiledata = db.cguscholar.find_one({"_id": oldID})
-            profiledata['_id']=newestID
-            db.cguscholar.insert_one(profiledata)
-            delete_jsonfileby_id('cguscholar',  oldID)
-        if db.articles.count_documents({'_id': oldID}, limit=1) != 0:
-            articlesdata = db.articles.find_one({"_id": oldID})        
-            articlesdata['_id']=newestID        
-            db.articles.insert_one(articlesdata)
-            delete_jsonfileby_id('articles',  oldID)
+def adjust_newestID(collection,newestID,oldID):
+    while 1:
+        try:     
+            print('**Adjust ID From ' + oldID + ' to ' +newestID + ' (' + collection + ')')
+            if  db[collection].count_documents({'_id': newestID}, limit=1) != 0:
+                delete_jsonfileby_id(collection,  oldID)
+                
+            if db[collection].count_documents({'_id': oldID}, limit=1) != 0:
+                profiledata = db[collection].find_one({"_id": oldID})                
+                profiledata['_id']=newestID
+                db[collection].insert_one(profiledata)
+                time.sleep(0.01)
+
+            if(db[collection].count_documents({'_id': oldID}, limit=1) == 0)&(db[collection].count_documents({'_id': newestID}, limit=1) != 0):
+                print('**Adjust ID From ' + oldID + ' to ' +newestID + ' (' + collection + ')OK')
+                break
         
-    except:
-        mongo_errorcheck()
+        except:
+            mongo_errorcheck()
+            continue
 
 
 def get_userupdatetime(ID,collection):
@@ -262,10 +269,11 @@ def get_labeldomainuserIDlist(label):
 def get_userIDforarticlesupdate():
     try:
         getuserID = []
-        getuserIDtemp = list(db.articles.find({}).sort("updateTime", 1).limit(1000))
+        getuserIDtemp = list(db.articles.find({}).sort("updateTime", 1).skip(50).limit(10))
         for userID in getuserIDtemp:
             getuserID.append(userID['_id'])
         print(getuserID)
+        time.sleep(3)
         return getuserID
     except:
         mongo_errorcheck()    
