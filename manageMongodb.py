@@ -147,25 +147,26 @@ def adjust_labelname(labelname):
     except:
         mongo_errorcheck()
 def adjust_newestID(collection,newestID,oldID):
-    while 1:
-        try:     
-            print('**Adjust ID From ' + oldID + ' to ' +newestID + ' (' + collection + ')')
-            if  db[collection].count_documents({'_id': newestID}, limit=1) != 0:
-                delete_jsonfileby_id(collection,  oldID)
+    
+    try:     
+        print('**Adjust ID From ' + oldID + ' to ' +newestID + ' (' + collection + ')')
+            
 
-            if db[collection].count_documents({'_id': oldID}, limit=1) != 0:
-                profiledata = db[collection].find_one({"_id": oldID})                
-                profiledata['_id']=newestID
-                db[collection].insert_one(profiledata)
-                time.sleep(0.01)
+        if db[collection].count_documents({'_id': oldID}, limit=1) != 0:
+            profiledata = db[collection].find_one({"_id": oldID})                
+            profiledata['_id']=newestID
+            db[collection].insert_one(profiledata)
+            time.sleep(0.01)
+        if  db[collection].count_documents({'_id': newestID}, limit=1) != 0:
+            delete_jsonfileby_id(collection,  oldID)
 
-            if(db[collection].count_documents({'_id': oldID}, limit=1) == 0)&(db[collection].count_documents({'_id': newestID}, limit=1) != 0):
-                print('**Adjust ID From ' + oldID + ' to ' +newestID + ' (' + collection + ')OK')
-                break
-        
-        except:
-            mongo_errorcheck()
-            continue
+        if(db[collection].count_documents({'_id': oldID}, limit=1) == 0)&(db[collection].count_documents({'_id': newestID}, limit=1) != 0):
+            print('**Adjust ID From ' + oldID + ' to ' +newestID + ' (' + collection + ')OK')
+            
+    
+    except:
+        mongo_errorcheck()
+            
 
 
 def get_userupdatetime(ID,collection):
