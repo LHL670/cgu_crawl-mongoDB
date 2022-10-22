@@ -25,7 +25,7 @@ def get_userprofile(soup):
     except: 
         try: 
             info['university'] = d.find('div', class_='gsc_prf_il').text 
-            print(info['university'] )
+            # print(info['university'] )
         except: 
             info['university'] = ' ' 
     # picture

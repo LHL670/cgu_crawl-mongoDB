@@ -8,8 +8,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-def Firefoxwebdriver(id):
-    url = 'https://scholar.google.com.tw/citations?hl=zh-TW&user=' + id + '&pagesize=100'
+def Firefoxwebdriver(newurl):
+    urlpage =  newurl + '&pagesize=100'
     # chrome_options = Options()
     options = Options()
     options.add_argument('--headless')
@@ -36,7 +36,7 @@ def Firefoxwebdriver(id):
     # driver = webdriver.Firefox()
     # driver.maximize_window()
     driver.implicitly_wait(8)  # set waiting time
-    driver.execute_script(f"location.href='{url}';")
+    driver.execute_script(f"location.href='{urlpage}';")
     # driver.get(url)
     while True:
         try:

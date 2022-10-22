@@ -6,7 +6,7 @@ import pymongo
 from pymongo import MongoClient
 import jsonTransfer
 import os
-import docker
+import recordtxt
 import time
 
 # cluster = MongoClient(
@@ -20,13 +20,16 @@ def mongo_errorcheck():
     while 1:
         try:
             cluster.server_info()
+            time.sleep(1)
+            os.system("docker restart Mongotest")
+
             return
 
         except Exception as err:
 
             print(err)
             print(getTime.currentTime)
-            time.sleep(15)
+            time.sleep(5)
             os.system("docker restart Mongotest")
 
 # 更新userprofile
@@ -143,7 +146,25 @@ def adjust_labelname(labelname):
                 print(error)
     except:
         mongo_errorcheck()
-# user profile updatetime
+def adjust_newestID(collection,newestID,oldID):
+    while db[collection].count_documents({'_id': oldID}, limit=1) != 0:     #舊ID還在
+        try:   
+            if db[collection].count_documents({'_id': newestID}, limit=1) == 0:     #當新ID還未建立
+                print('**Adjust ID From ' + oldID + ' to ' +newestID + ' (' + collection + ')')
+                profiledata = db[collection].find_one({"_id": oldID})                
+                profiledata['_id']=newestID
+                db[collection].insert_one(profiledata)
+                time.sleep(0.01)
+            if  db[collection].count_documents({'_id': newestID}, limit=1) != 0:        #當新ID建立
+                delete_jsonfileby_id(collection,  oldID)
+
+            if(db[collection].count_documents({'_id': oldID}, limit=1) == 0)&(db[collection].count_documents({'_id': newestID}, limit=1) != 0):
+                print('**Adjust ID From ' + oldID + ' to ' +newestID + ' (' + collection + ')OK')
+                break               
+        
+        except:
+            mongo_errorcheck()
+            
 
 
 def get_userupdatetime(ID,collection):
@@ -247,10 +268,11 @@ def get_labeldomainuserIDlist(label):
 def get_userIDforarticlesupdate():
     try:
         getuserID = []
-        getuserIDtemp = list(db.articles.find({}).sort("updateTime", 1).skip(1200).limit(1100))
+        getuserIDtemp = list(db.articles.find({}).sort("updateTime", 1).skip(50).limit(1000))
         for userID in getuserIDtemp:
             getuserID.append(userID['_id'])
         print(getuserID)
+        time.sleep(3)
         return getuserID
     except:
         mongo_errorcheck()    

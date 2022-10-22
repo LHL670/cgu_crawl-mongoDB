@@ -8,6 +8,10 @@ import manageMongodb
 import random
 import webdriver
 import CGUScholar_articles
+import get_requests
+import checkID
+import recordtxt
+import deleteandrecordmongoDB
 # Worker 類別，負責處理資料
 
 
@@ -19,15 +23,29 @@ class CGUScholarbyarticles(threading.Thread):
     def run(self):
         while self.queue.qsize() > 0:
             user_ID = self.queue.get()
-            soup = webdriver.Firefoxwebdriver(user_ID)
+            url =  get_requests.urlcontent(user_ID)
+            #不存在
+            if url == None:
+                recordtxt.writedeleteID(user_ID)
+                deleteandrecordmongoDB.movetodeleteDB('articles',user_ID)
+                deleteandrecordmongoDB.movetodeleteDB('cguscholar',user_ID)
+                manageMongodb.delete_jsonfileby_id('articles', user_ID)
+                manageMongodb.delete_jsonfileby_id('cguscholar', user_ID)
+                continue
+            #確認ID是否變動
+            check_ID = checkID.getnewestID(url)
+            if check_ID != user_ID:
+                recordtxt.writeadjustID(check_ID,user_ID)
+                manageMongodb.adjust_newestID('cguscholar',check_ID,user_ID)#newestID,oldID
+                manageMongodb.adjust_newestID('articles',check_ID,user_ID)
+            soup = webdriver.Firefoxwebdriver(url)
             if soup == None:
                     continue
             try:
-                personalinfo = CGUScholarCrawl.get_personalpage(soup,user_ID)
+                personalinfo = CGUScholarCrawl.get_personalpage(soup,check_ID)
                 articles = CGUScholar_articles.get_articles(soup)
                 if articles == None:
-                #    manageMongodb.delete_jsonfileby_id('articles', user_ID)
-                #    manageMongodb.delete_jsonfileby_id('cguscholar', user_ID)
+
                    continue
 
                 check_personalformat = checkDataformat.personalinfoformat(
@@ -48,7 +66,7 @@ class CGUScholarbyarticles(threading.Thread):
             manageMongodb.update_personaldata(personalinfo)
             manageMongodb.add_labeldomain(
                 personalinfo['personalData']['label'])
-            manageMongodb.update_articles(user_ID,articles)
+            manageMongodb.update_articles(check_ID,articles)
             sleepTime = random.uniform(0.01, 0.05)
             time.sleep(sleepTime)
 
