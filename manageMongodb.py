@@ -147,25 +147,23 @@ def adjust_labelname(labelname):
     except:
         mongo_errorcheck()
 def adjust_newestID(collection,newestID,oldID):
-    
-    try:     
-        print('**Adjust ID From ' + oldID + ' to ' +newestID + ' (' + collection + ')')
-            
+    while db[collection].count_documents({'_id': oldID}, limit=1) != 0:     #舊ID還在
+        try:   
+            if db[collection].count_documents({'_id': newestID}, limit=1) == 0:     #當新ID還未建立
+                print('**Adjust ID From ' + oldID + ' to ' +newestID + ' (' + collection + ')')
+                profiledata = db[collection].find_one({"_id": oldID})                
+                profiledata['_id']=newestID
+                db[collection].insert_one(profiledata)
+                time.sleep(0.01)
+            if  db[collection].count_documents({'_id': newestID}, limit=1) != 0:        #當新ID建立
+                delete_jsonfileby_id(collection,  oldID)
 
-        if db[collection].count_documents({'_id': oldID}, limit=1) != 0:
-            profiledata = db[collection].find_one({"_id": oldID})                
-            profiledata['_id']=newestID
-            db[collection].insert_one(profiledata)
-            time.sleep(0.01)
-        if  db[collection].count_documents({'_id': newestID}, limit=1) != 0:
-            delete_jsonfileby_id(collection,  oldID)
-
-        if(db[collection].count_documents({'_id': oldID}, limit=1) == 0)&(db[collection].count_documents({'_id': newestID}, limit=1) != 0):
-            print('**Adjust ID From ' + oldID + ' to ' +newestID + ' (' + collection + ')OK')
-            
-    
-    except:
-        mongo_errorcheck()
+            if(db[collection].count_documents({'_id': oldID}, limit=1) == 0)&(db[collection].count_documents({'_id': newestID}, limit=1) != 0):
+                print('**Adjust ID From ' + oldID + ' to ' +newestID + ' (' + collection + ')OK')
+                break               
+        
+        except:
+            mongo_errorcheck()
             
 
 
