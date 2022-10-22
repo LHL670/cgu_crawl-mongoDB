@@ -11,11 +11,13 @@ db = cluster["DeleteData"]
 
 
 def movetodeleteDB(collection,ID):
-    try:
-        if origindb[collection].count_documents({'_id': ID}, limit=1) != 0:
+    while db[collection].count_documents({'_id': ID}, limit=1) == 0:
+        try:            
             profiledata = origindb[collection].find_one({"_id": ID})
             profiledata['updateTime'] = getTime.currentTime()                
             db[collection].insert_one(profiledata)
-            print('--Move '+ID+ ' to DeleteData' + ' (' + collection + ')')
-    except:
-        manageMongodb.mongo_errorcheck()
+                
+        except:
+            manageMongodb.mongo_errorcheck()
+    print('--Move '+ID+ ' to DeleteData' + ' (' + collection + ')')
+    return True
