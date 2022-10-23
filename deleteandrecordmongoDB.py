@@ -10,14 +10,15 @@ origindb = cluster["CGUScholar_com"]
 db = cluster["DeleteData"]
 
 
-def movetodeleteDB(collection,ID):
-    while db[collection].count_documents({'_id': ID}, limit=1) == 0:
-        try:            
+def movetodeleteDB(collection,ID):    
+    try:
+        if db[collection].count_documents({'_id': ID}, limit=1) == 0:           
             profiledata = origindb[collection].find_one({"_id": ID})
             profiledata['updateTime'] = getTime.currentTime()                
             db[collection].insert_one(profiledata)
-                
-        except:
-            manageMongodb.mongo_errorcheck()
-    print('--Move '+ID+ ' to DeleteData' + ' (' + collection + ')')
-    return True
+            print('--Move '+ID+ ' to DeleteData' + ' (' + collection + ')')
+            
+    except:
+        manageMongodb.mongo_errorcheck()
+    
+    
