@@ -266,13 +266,15 @@ def get_labeldomainuserIDlist(label):
         mongo_errorcheck()
 
 def get_userIDforarticlesupdate():
-    try:
-        getuserID = []
-        getuserIDtemp = list(db.articles.find({}).sort("updateTime", 1).skip(50).limit(1000))
-        for userID in getuserIDtemp:
-            getuserID.append(userID['_id'])
-        print(getuserID)
-        time.sleep(3)
-        return getuserID
-    except:
-        mongo_errorcheck()    
+    getuserID = []
+    while len(getuserID) != 1000:
+        try:            
+            getuserIDtemp = list(db.articles.find({}).sort("updateTime", 1).limit(1000))
+            for userID in getuserIDtemp:
+                getuserID.append(userID['_id'])
+            print(getuserID)
+            time.sleep(3)
+            
+        except:
+            mongo_errorcheck()
+    return getuserID    
