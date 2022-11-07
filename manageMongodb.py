@@ -269,12 +269,14 @@ def get_userIDforarticlesupdate():
     getuserID = []
     while len(getuserID) != 1000:
         try:            
-            getuserIDtemp = list(db.articles.find({}).sort("updateTime", 1).limit(1000))
+            #getuserIDtemp = list(db.articles.find({}).sort("updateTime", 1).limit(1000))
+            getuserIDtemp = list(db.articles.aggregate( [ {"$sort": { "updateTime": 1,}},{"$limit": 1000}],allowDiskUse=True ));
             for userID in getuserIDtemp:
                 getuserID.append(userID['_id'])
             print(getuserID)
             time.sleep(3)
             
-        except:
-            mongo_errorcheck()
+        except Exception as e:
+        	print(e)
+            #mongo_errorcheck()
     return getuserID    
