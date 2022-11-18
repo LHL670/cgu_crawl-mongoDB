@@ -276,7 +276,7 @@ def get_userIDforarticlesupdate():
             print(getuserID)
             time.sleep(3)
             
-        except Exception as e:
-        	print(e)
-            #mongo_errorcheck()
+        except:
+        	# print(e)
+            mongo_errorcheck()
     return getuserID    
