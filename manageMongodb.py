@@ -54,7 +54,7 @@ def update_personaldata(personalData):
         personalDatadict = jsonTransfer.jsontransform(personalData)
         if db.cguscholar.count_documents({'_id': personalDatadict['_id']}, limit=1) != 0:
 
-            print(str(personalDatadict['_id'])+" exist")
+            print(str(personalDatadict['_id'])+" profile update")
             a = {"$push": {'citedRecord': {
                 "$each": personalDatadict['citedRecord']}}}
             b = {"$set": {
@@ -266,13 +266,18 @@ def get_labeldomainuserIDlist(label):
         mongo_errorcheck()
 
 def get_userIDforarticlesupdate():
-    try:
-        getuserID = []
-        getuserIDtemp = list(db.articles.find({}).sort("updateTime", 1).skip(50).limit(1000))
-        for userID in getuserIDtemp:
-            getuserID.append(userID['_id'])
-        print(getuserID)
-        time.sleep(3)
-        return getuserID
-    except:
-        mongo_errorcheck()    
+    getuserID = []
+    while len(getuserID) != 1000:
+        try:            
+            #getuserIDtemp = list(db.articles.find({}).sort("updateTime", 1).limit(1000))
+            getuserIDtemp = list(db.articles.aggregate( [ {"$sort": { "updateTime": 1,}},{"$limit": 1000}],allowDiskUse=True ));
+            for userID in getuserIDtemp:
+                getuserID.append(userID['_id'])
+            print(getuserID)
+            time.sleep(3)
+            
+        except:
+        	# print(e)
+            mongo_errorcheck()
+            get_userIDforarticlesupdate()
+    return getuserID  

@@ -13,7 +13,7 @@ import checkID
 import recordtxt
 import deleteandrecordmongoDB
 # Worker 類別，負責處理資料
-
+import queue
 
 class CGUScholarbyarticles(threading.Thread):
     def __init__(self, CGUqueue):
@@ -73,6 +73,7 @@ class CGUScholarbyarticles(threading.Thread):
 
 def CGUCrawlWorker():
     work_queue = getIDQueue.get_IDqueue_forarticles()
+    
     # 建立兩個 Worker
     CGUWorker1 = CGUScholarbyarticles(work_queue)
     CGUWorker2 = CGUScholarbyarticles(work_queue)
