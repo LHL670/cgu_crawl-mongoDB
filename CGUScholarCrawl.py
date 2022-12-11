@@ -15,8 +15,10 @@ def get_userprofile(soup):
         info['name'] = d.find('div', id='gsc_prf_in').text
 
     except Exception as e:
+        info['name'] = None
         print('Skip : name format error ')
         print(e)
+        
    #university 
     try:        
         info['university'] = d.find('a', class_='gsc_prf_ila').text 

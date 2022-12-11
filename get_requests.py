@@ -43,8 +43,11 @@ def urlcontent(id):
     # while 1:
     #     if (response.status_code == requests.codes.ok) or (time.time() > timeout):            
     #         break
-    if (response.status_code == requests.codes.ok or response.status_code == 429):
+    if (response.status_code == requests.codes.ok ):
         return response.url
+    elif(response.status_code == 429 ):
+    	time.sleep(1)
+    	return response.url
     else:
         return None
      

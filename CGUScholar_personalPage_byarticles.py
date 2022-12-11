@@ -14,7 +14,7 @@ import recordtxt
 import deleteandrecordmongoDB
 # Worker 類別，負責處理資料
 import queue
-
+import movedatatoDeleteData
 class CGUScholarbyarticles(threading.Thread):
     def __init__(self, CGUqueue):
         threading.Thread.__init__(self)
@@ -26,11 +26,7 @@ class CGUScholarbyarticles(threading.Thread):
             url =  get_requests.urlcontent(user_ID)
             #不存在
             if url == None:
-                recordtxt.writedeleteID(user_ID)
-                deleteandrecordmongoDB.movetodeleteDB('articles',user_ID)
-                deleteandrecordmongoDB.movetodeleteDB('cguscholar',user_ID)
-                manageMongodb.delete_jsonfileby_id('articles', user_ID)
-                manageMongodb.delete_jsonfileby_id('cguscholar', user_ID)
+                movedatatoDeleteData.from_CGUScholar_com_to_DeleteData(user_ID)
                 continue
             #確認ID是否變動
             check_ID = checkID.getnewestID(url)
@@ -40,16 +36,18 @@ class CGUScholarbyarticles(threading.Thread):
                 manageMongodb.adjust_newestID('articles',check_ID,user_ID)
             soup = webdriver.Firefoxwebdriver(url)
             if soup == None:
-                    continue
+                movedatatoDeleteData.from_CGUScholar_com_to_DeleteData(user_ID)
+                continue
             try:
                 personalinfo = CGUScholarCrawl.get_personalpage(soup,check_ID)
                 articles = CGUScholar_articles.get_articles(soup)
                 if articles == None:
-
+                   movedatatoDeleteData.from_CGUScholar_com_to_DeleteData(user_ID)
                    continue
 
                 check_personalformat = checkDataformat.personalinfoformat(
                     personalinfo)
+                
             except:
                 continue
             # ID和name 為空或格式錯誤時回傳False,格式錯誤修正後回傳rewriteInfo
@@ -61,7 +59,11 @@ class CGUScholarbyarticles(threading.Thread):
                     personalinfo = fix_personalformat
                 except:
                     print(user_ID+' skip')
+                    movedatatoDeleteData.from_CGUScholar_com_to_DeleteData(user_ID)
                     continue
+            else:
+            	movedatatoDeleteData.from_CGUScholar_com_to_DeleteData(user_ID)
+            	continue
             
             manageMongodb.update_personaldata(personalinfo)
             manageMongodb.add_labeldomain(

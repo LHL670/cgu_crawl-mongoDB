@@ -8,6 +8,7 @@ def personalinfoformat(data):
         return False
     # check personal data format
     if(data['personalData']['name'] == ' ' or data['personalData']['name'] == None):
+        #print("check")
         return False
     else:
         return True
